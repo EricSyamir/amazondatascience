@@ -44,7 +44,7 @@ export default function InsightsQASection() {
     fetch('/dashboard_data/insights_qa.json')
       .then(res => res.json())
       .then((data: InsightItem[]) => {
-        setItems(data)
+        setItems(data.filter(item => !['q3', 'q6', 'q8'].includes(item.id)))
         setLoading(false)
       })
       .catch(err => {

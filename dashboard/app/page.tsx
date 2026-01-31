@@ -6,6 +6,9 @@ import CategoryChart from '@/components/CategoryChart'
 import PriceRangeChart from '@/components/PriceRangeChart'
 import DiscountChart from '@/components/DiscountChart'
 import TopProductsTable from '@/components/TopProductsTable'
+import ProductKeywordsChart from '@/components/ProductKeywordsChart'
+import PriceVsDiscountChart from '@/components/PriceVsDiscountChart'
+import PriceRatingCorrelationChart from '@/components/PriceRatingCorrelationChart'
 import InsightsQASection from '@/components/InsightsQASection'
 import { TrendingUp, Package, Star, DollarSign } from 'lucide-react'
 
@@ -128,15 +131,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Discount Analysis */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            Discount Impact Analysis
-          </h2>
-          <DiscountChart />
-        </div>
-
-        {/* Top Products Table */}
+        {/* Top Rated Products (5 only) */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">
             Top Rated Products
@@ -144,7 +139,39 @@ export default function Home() {
           <TopProductsTable />
         </div>
 
-        {/* Insights & Q&A from EDA */}
+        {/* Product Keywords */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            Product Keywords
+          </h2>
+          <ProductKeywordsChart />
+        </div>
+
+        {/* Price vs Discount */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            Price vs Discount Distribution
+          </h2>
+          <PriceVsDiscountChart />
+        </div>
+
+        {/* Price–Rating Correlation */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            Price–Rating Correlation
+          </h2>
+          <PriceRatingCorrelationChart />
+        </div>
+
+        {/* Discount Impact Analysis */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            Discount Impact Analysis
+          </h2>
+          <DiscountChart />
+        </div>
+
+        {/* Insights & Q&A from EDA (excluding Product Keywords, Price vs Discount, Price–Rating Correlation) */}
         <InsightsQASection />
       </div>
 

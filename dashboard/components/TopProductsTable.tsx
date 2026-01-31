@@ -21,7 +21,7 @@ export default function TopProductsTable() {
     fetch('/dashboard_data/top_rated_products.json')
       .then(res => res.json())
       .then((data: Product[]) => {
-        setData(data.slice(0, 15))
+        setData(data.slice(0, 5))
         setLoading(false)
       })
       .catch(err => {

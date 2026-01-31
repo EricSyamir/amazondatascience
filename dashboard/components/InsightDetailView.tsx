@@ -214,7 +214,7 @@ export default function InsightDetailView({ insightId }: InsightDetailViewProps)
             <ScatterChart margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="price" name="Price" tick={{ fontSize: 10 }} />
-              <YAxis dataKey="rating" name="Rating" domain={[1, 5]} tick={{ fontSize: 10 }} />
+              <YAxis dataKey="rating" name="Rating" domain={[3, 5]} tick={{ fontSize: 10 }} />
               <Tooltip cursor={{ strokeDasharray: '3 3' }} />
               <Scatter data={payload.scatter} fill="#3b82f6" name="Product" />
             </ScatterChart>

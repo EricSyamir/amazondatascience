@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
 interface DiscountData {
   discount_range: string
@@ -32,15 +32,16 @@ export default function DiscountChart() {
 
   return (
     <ResponsiveContainer width="100%" height={400}>
-      <BarChart data={data}>
+      <ComposedChart data={data}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="discount_range" />
-        <YAxis />
-        <Tooltip />
+        <YAxis yAxisId="left" orientation="left" stroke="#f59e0b" tickFormatter={(v) => v.toLocaleString()} />
+        <YAxis yAxisId="right" orientation="right" stroke="#8b5cf6" domain={[3, 5]} tickFormatter={(v) => v.toFixed(1)} />
+        <Tooltip formatter={(value, name) => [name === 'Avg Rating' ? Number(value).toFixed(2) : value, name]} />
         <Legend />
-        <Bar dataKey="avg_rating" fill="#8b5cf6" name="Avg Rating" />
-        <Bar dataKey="product_count" fill="#f59e0b" name="Product Count" />
-      </BarChart>
+        <Bar yAxisId="left" dataKey="product_count" fill="#f59e0b" name="Product Count" radius={[4, 4, 0, 0]} />
+        <Line yAxisId="right" type="monotone" dataKey="avg_rating" stroke="#8b5cf6" strokeWidth={3} dot={{ r: 5 }} name="Avg Rating" />
+      </ComposedChart>
     </ResponsiveContainer>
   )
 }

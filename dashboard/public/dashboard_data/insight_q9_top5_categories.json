@@ -1,0 +1,27 @@
+[
+  {
+    "category_short":"Tablets",
+    "avg_rating":4.6,
+    "product_count":1
+  },
+  {
+    "category_short":"Memory",
+    "avg_rating":4.5,
+    "product_count":1
+  },
+  {
+    "category_short":"PowerLANAdapters",
+    "avg_rating":4.5,
+    "product_count":1
+  },
+  {
+    "category_short":"Film",
+    "avg_rating":4.5,
+    "product_count":1
+  },
+  {
+    "category_short":"StreamingClients",
+    "avg_rating":4.5,
+    "product_count":1
+  }
+]

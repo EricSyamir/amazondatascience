@@ -1,0 +1,325 @@
+{
+  "correlation": 0.1203,
+  "scatter": [
+    {
+      "price": 8886.0,
+      "rating": 4.2
+    },
+    {
+      "price": 199.0,
+      "rating": 3.7
+    },
+    {
+      "price": 399.0,
+      "rating": 3.3
+    },
+    {
+      "price": 299.0,
+      "rating": 4.3
+    },
+    {
+      "price": 209.0,
+      "rating": 3.9
+    },
+    {
+      "price": 1234.0,
+      "rating": 4.5
+    },
+    {
+      "price": 199.0,
+      "rating": 4.1
+    },
+    {
+      "price": 507.0,
+      "rating": 4.1
+    },
+    {
+      "price": 1260.0,
+      "rating": 4.2
+    },
+    {
+      "price": 949.0,
+      "rating": 3.6
+    },
+    {
+      "price": 721.0,
+      "rating": 3.1
+    },
+    {
+      "price": 299.0,
+      "rating": 3.9
+    },
+    {
+      "price": 266.0,
+      "rating": 4.5
+    },
+    {
+      "price": 67.0,
+      "rating": 4.1
+    },
+    {
+      "price": 1999.0,
+      "rating": 4.4
+    },
+    {
+      "price": 209.0,
+      "rating": 4.4
+    },
+    {
+      "price": 1815.0,
+      "rating": 4.5
+    },
+    {
+      "price": 179.0,
+      "rating": 4.0
+    },
+    {
+      "price": 199.0,
+      "rating": 4.2
+    },
+    {
+      "price": 1049.0,
+      "rating": 3.1
+    },
+    {
+      "price": 7999.0,
+      "rating": 4.3
+    },
+    {
+      "price": 298.0,
+      "rating": 4.4
+    },
+    {
+      "price": 375.0,
+      "rating": 3.6
+    },
+    {
+      "price": 425.0,
+      "rating": 4.5
+    },
+    {
+      "price": 349.0,
+      "rating": 3.8
+    },
+    {
+      "price": 1199.0,
+      "rating": 4.5
+    },
+    {
+      "price": 119.0,
+      "rating": 4.1
+    },
+    {
+      "price": 369.0,
+      "rating": 4.0
+    },
+    {
+      "price": 8999.0,
+      "rating": 4.4
+    },
+    {
+      "price": 798.0,
+      "rating": 4.0
+    },
+    {
+      "price": 579.0,
+      "rating": 4.3
+    },
+    {
+      "price": 729.0,
+      "rating": 4.3
+    },
+    {
+      "price": 199.0,
+      "rating": 4.2
+    },
+    {
+      "price": 16999.0,
+      "rating": 4.1
+    },
+    {
+      "price": 349.0,
+      "rating": 3.9
+    },
+    {
+      "price": 47990.0,
+      "rating": 4.3
+    },
+    {
+      "price": 12499.0,
+      "rating": 4.3
+    },
+    {
+      "price": 649.0,
+      "rating": 3.9
+    },
+    {
+      "price": 2903.0,
+      "rating": 4.3
+    },
+    {
+      "price": 1799.0,
+      "rating": 4.2
+    },
+    {
+      "price": 300.0,
+      "rating": 4.2
+    },
+    {
+      "price": 349.0,
+      "rating": 4.0
+    },
+    {
+      "price": 149.0,
+      "rating": 4.0
+    },
+    {
+      "price": 299.0,
+      "rating": 3.8
+    },
+    {
+      "price": 1959.0,
+      "rating": 4.0
+    },
+    {
+      "price": 1469.0,
+      "rating": 4.2
+    },
+    {
+      "price": 1321.0,
+      "rating": 4.3
+    },
+    {
+      "price": 279.0,
+      "rating": 4.8
+    },
+    {
+      "price": 119.0,
+      "rating": 3.8
+    },
+    {
+      "price": 99.0,
+      "rating": 4.1
+    },
+    {
+      "price": 35999.0,
+      "rating": 4.3
+    },
+    {
+      "price": 599.0,
+      "rating": 4.0
+    },
+    {
+      "price": 20999.0,
+      "rating": 3.9
+    },
+    {
+      "price": 199.0,
+      "rating": 4.1
+    },
+    {
+      "price": 499.0,
+      "rating": 3.9
+    },
+    {
+      "price": 269.0,
+      "rating": 4.3
+    },
+    {
+      "price": 29990.0,
+      "rating": 4.3
+    },
+    {
+      "price": 20999.0,
+      "rating": 4.3
+    },
+    {
+      "price": 599.0,
+      "rating": 4.3
+    },
+    {
+      "price": 645.0,
+      "rating": 4.0
+    },
+    {
+      "price": 1699.0,
+      "rating": 4.4
+    },
+    {
+      "price": 1099.0,
+      "rating": 3.8
+    },
+    {
+      "price": 179.0,
+      "rating": 4.2
+    },
+    {
+      "price": 130.0,
+      "rating": 3.9
+    },
+    {
+      "price": 190.0,
+      "rating": 4.4
+    },
+    {
+      "price": 179.0,
+      "rating": 4.0
+    },
+    {
+      "price": 399.0,
+      "rating": 4.2
+    },
+    {
+      "price": 199.0,
+      "rating": 3.6
+    },
+    {
+      "price": 1199.0,
+      "rating": 3.8
+    },
+    {
+      "price": 299.0,
+      "rating": 4.3
+    },
+    {
+      "price": 999.0,
+      "rating": 4.3
+    },
+    {
+      "price": 1999.0,
+      "rating": 4.0
+    },
+    {
+      "price": 1499.0,
+      "rating": 4.4
+    },
+    {
+      "price": 309.0,
+      "rating": 4.4
+    },
+    {
+      "price": 13999.0,
+      "rating": 4.1
+    },
+    {
+      "price": 210.0,
+      "rating": 4.1
+    },
+    {
+      "price": 99.0,
+      "rating": 3.9
+    },
+    {
+      "price": 799.0,
+      "rating": 3.8
+    },
+    {
+      "price": 7499.0,
+      "rating": 4.0
+    },
+    {
+      "price": 218.0,
+      "rating": 4.2
+    }
+  ]
+}

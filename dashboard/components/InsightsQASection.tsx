@@ -14,6 +14,7 @@ import {
   X,
   ChevronRight,
 } from 'lucide-react'
+import InsightDetailView from './InsightDetailView'
 
 interface InsightItem {
   id: string
@@ -125,10 +126,17 @@ export default function InsightsQASection() {
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <div className="px-6 py-4 overflow-y-auto flex-1">
-              <p className="text-gray-600 leading-relaxed">
-                {selected.answer}
-              </p>
+            <div className="px-6 py-4 overflow-y-auto flex-1 space-y-4">
+              <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                <h4 className="text-sm font-semibold text-gray-700 mb-3">Data</h4>
+                <InsightDetailView insightId={selected.id} />
+              </div>
+              <div>
+                <h4 className="text-sm font-semibold text-gray-700 mb-2">Insight</h4>
+                <p className="text-gray-600 leading-relaxed text-sm">
+                  {selected.answer}
+                </p>
+              </div>
             </div>
             <div className="px-6 py-3 border-t border-gray-100 bg-gray-50">
               <button

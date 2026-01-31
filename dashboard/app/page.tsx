@@ -9,8 +9,9 @@ import TopProductsTable from '@/components/TopProductsTable'
 import ProductKeywordsChart from '@/components/ProductKeywordsChart'
 import PriceVsDiscountChart from '@/components/PriceVsDiscountChart'
 import PriceRatingCorrelationChart from '@/components/PriceRatingCorrelationChart'
-import BusinessInsights from '@/components/BusinessInsights'
 import InsightsQASection from '@/components/InsightsQASection'
+import Nav from '@/components/Nav'
+import Link from 'next/link'
 import { TrendingUp, Package, Star, DollarSign } from 'lucide-react'
 
 interface SummaryStats {
@@ -49,6 +50,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <Nav />
       {/* Header */}
       <header className="bg-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -172,8 +174,15 @@ export default function Home() {
           <DiscountChart />
         </div>
 
-        {/* Business Insights - Statistical Hypothesis Tests */}
-        <BusinessInsights />
+        {/* Link to Business Insights page */}
+        <div className="mb-8">
+          <Link
+            href="/business-insights"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-md"
+          >
+            View Business Insights (Statistical Hypothesis Tests)
+          </Link>
+        </div>
 
         {/* Insights & Q&A from EDA (excluding Product Keywords, Price vs Discount, Price–Rating Correlation) */}
         <InsightsQASection />

@@ -6,6 +6,7 @@ import CategoryChart from '@/components/CategoryChart'
 import PriceRangeChart from '@/components/PriceRangeChart'
 import DiscountChart from '@/components/DiscountChart'
 import TopProductsTable from '@/components/TopProductsTable'
+import InsightsQASection from '@/components/InsightsQASection'
 import { TrendingUp, Package, Star, DollarSign } from 'lucide-react'
 
 interface SummaryStats {
@@ -136,12 +137,15 @@ export default function Home() {
         </div>
 
         {/* Top Products Table */}
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">
             Top Rated Products
           </h2>
           <TopProductsTable />
         </div>
+
+        {/* Insights & Q&A from EDA */}
+        <InsightsQASection />
       </div>
 
       {/* Footer */}

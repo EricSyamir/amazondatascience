@@ -1,46 +1,55 @@
 [
   {
     "id": "q1",
+    "cardTitle": "Rating by Category",
     "question": "What is the average rating for each product category?",
     "answer": "Most product categories have generally positive customer feedback, with average ratings above 3.50. Some categories have lower ratings, suggesting potential areas for improvement. Further analysis of these categories could help identify specific reasons for lower feedback and potential solutions."
   },
   {
     "id": "q2",
+    "cardTitle": "Top Products by Reviews",
     "question": "What are the top rating_count products by category?",
     "answer": "Products with high review counts are likely popular within their categories, suggesting customer interest and engagement. Review counts range from 9 to 15,867, implying varying levels of attention across products. Most listed products have ratings above 3.5, indicating a generally positive customer experience. Products with the highest review counts within their categories might be considered potential top sellers."
   },
   {
     "id": "q3",
+    "cardTitle": "Price vs Discount",
     "question": "What is the distribution of discounted prices vs. actual prices?",
     "answer": "Discounted prices are generally lower than actual prices, with a median discounted price of ₹200 and median actual price of ₹400. The discount percentage distribution is skewed left, with most products having a discount of 30% or less. There may be opportunities to adjust discounted prices or discount percentages to attract more customers."
   },
   {
     "id": "q4",
+    "cardTitle": "Discount by Category",
     "question": "How does the average discount percentage vary across categories?",
     "answer": "Average discount percentages vary widely across categories, ranging from 0% to 78.39%. Some categories stand out with notably higher average discounts, suggesting clearance efforts, high competition, or lower-profit margins. Categories with 0% average discount indicate consistent pricing or strong demand. Other categories exhibit varying discount percentages, reflecting diverse pricing strategies and market dynamics."
   },
   {
     "id": "q5",
+    "cardTitle": "Popular Products",
     "question": "What are the most popular product names?",
     "answer": "Fire-Boltt Ninja Call Pro Plus Smart Watch and Fire-Boltt Phoenix Smart Watch are among the most popular products. Smart Watches and Charging Cables are the most popular product categories. Multiple brands are represented, with boAt appearing frequently. Fast charging, durability, and functionality are key features. Popularity is relatively evenly distributed beyond the leading products."
   },
   {
     "id": "q6",
+    "cardTitle": "Product Keywords",
     "question": "What are the most popular product keywords?",
     "answer": "USB connectivity, charging (especially fast charging), and cables are prominent product features. Prepositions and conjunctions like \"with\", \"for\", \"and\", \"to\" suggest a focus on explaining product compatibility and usage scenarios. Cables and smart devices are well-represented in the dataset. Product names tend to be concise and use common words."
   },
   {
     "id": "q7",
+    "cardTitle": "Review Sentiment",
     "question": "What are the most popular product reviews?",
     "answer": "Overall sentiment scores are relatively low, suggesting a tendency towards neutral or slightly negative reviews in the sample. Reviews range from strongly negative (e.g., issues with battery charging, product quality) to mildly positive. Some reviews express both positive and negative aspects within the same text, suggesting nuanced evaluation. Identical review content across some products may indicate data duplication and could warrant investigation."
   },
   {
     "id": "q8",
+    "cardTitle": "Price–Rating Correlation",
     "question": "What is the correlation between discounted price and rating?",
     "answer": "Discounted price and rating have a weak positive correlation. Products with higher discounted prices tend to have slightly higher ratings, but the relationship is not very strong. Other factors (category, brand, features) likely influence ratings as much as or more than price."
   },
   {
     "id": "q9",
+    "cardTitle": "Top 5 Categories",
     "question": "What are the Top 5 categories with highest ratings?",
     "answer": "The top 5 categories have average ratings between 4.50 and 4.60, indicating overall positive customer satisfaction. Most top-rated categories fall within technology-related domains: tablets, networking devices, photography accessories, media streaming devices, and calculators. Within broader categories like Computers & Accessories and Electronics, subcategories such as tablets, powerline adapters, film accessories, and streaming clients emerge as particularly well-rated. The presence of Basic Calculators in the top 5 suggests that even relatively simple products can achieve high ratings if they meet customer needs effectively."
   }

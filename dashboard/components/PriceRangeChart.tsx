@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
 interface PriceRangeData {
   price_range: string
@@ -32,27 +32,16 @@ export default function PriceRangeChart() {
 
   return (
     <ResponsiveContainer width="100%" height={400}>
-      <LineChart data={data}>
+      <ComposedChart data={data}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="price_range" />
-        <YAxis />
-        <Tooltip />
+        <XAxis dataKey="price_range" tick={{ fontSize: 12 }} />
+        <YAxis yAxisId="left" orientation="left" stroke="#10b981" tickFormatter={(v) => v.toLocaleString()} label={{ value: 'Product Count', angle: -90, position: 'insideLeft', style: { fill: '#10b981' } }} />
+        <YAxis yAxisId="right" orientation="right" stroke="#3b82f6" domain={[3, 5]} tickFormatter={(v) => v.toFixed(1)} label={{ value: 'Avg Rating', angle: 90, position: 'insideRight', style: { fill: '#3b82f6' } }} />
+        <Tooltip formatter={(value, name) => [name === 'Avg Rating' ? Number(value).toFixed(2) : value, name]} />
         <Legend />
-        <Line 
-          type="monotone" 
-          dataKey="avg_rating" 
-          stroke="#3b82f6" 
-          strokeWidth={2}
-          name="Avg Rating"
-        />
-        <Line 
-          type="monotone" 
-          dataKey="product_count" 
-          stroke="#10b981" 
-          strokeWidth={2}
-          name="Product Count"
-        />
-      </LineChart>
+        <Bar yAxisId="left" dataKey="product_count" fill="#10b981" name="Product Count" radius={[4, 4, 0, 0]} />
+        <Line yAxisId="right" type="monotone" dataKey="avg_rating" stroke="#3b82f6" strokeWidth={2} dot={{ r: 4 }} name="Avg Rating" />
+      </ComposedChart>
     </ResponsiveContainer>
   )
 }

@@ -25,8 +25,20 @@ This project aims to conduct a comprehensive exploratory data analysis (EDA) and
 - Comprehensive insights into product category performance
 - Understanding of optimal pricing and discount strategies
 - Customer sentiment analysis from reviews
-- Interactive dashboard for data visualization
+- Interactive dashboard for data visualization (hosted on Vercel)
 - Actionable recommendations for e-commerce optimization
+
+### 1.3 Dashboard System (Deliverable)
+
+The project includes an interactive web dashboard built with Next.js, React, and Recharts, deployable on Vercel at no cost. The dashboard will include:
+
+- **Summary metrics:** Total products, categories, average rating, average price, average discount, total reviews
+- **Charts:** Category performance (dual-axis), Price range analysis (dual-axis), Discount impact analysis (dual-axis)
+- **Top Rated Products:** Table of top 5 products by rating
+- **Product Keywords:** Bar chart of most frequent keywords from product names
+- **Price vs Discount Distribution:** Bar chart of product counts by price range (discounted vs actual)
+- **Price–Rating Correlation:** Scatter plot with correlation value (rating axis 3–5 for clarity)
+- **Data Insights:** Clickable cards linking to EDA questions with tables/charts (rating by category, top products by reviews, discount by category, popular products, review sentiment, top 5 categories)
 
 ---
 
@@ -134,11 +146,11 @@ This dataset provides a rich source of information combining product attributes,
 The project will follow the standard data science workflow:
 
 1. **Data Understanding:** Exploratory data analysis to understand data structure and quality
-2. **Data Preparation:** Cleaning, preprocessing, and feature engineering
-3. **Data Analysis:** Statistical analysis, correlation studies, and pattern identification
-4. **Modeling:** Predictive models for ratings and sales potential
-5. **Visualization:** Interactive dashboard for presenting insights
-6. **Reporting:** Comprehensive documentation of findings and recommendations
+2. **Data Preparation:** Cleaning, preprocessing, and feature engineering (Python; output: JSON/CSV for dashboard)
+3. **Data Analysis:** Statistical analysis, correlation studies, and pattern identification (including per-question datasets for EDA Q1–Q9)
+4. **Modeling:** Predictive models for ratings and sales potential (as applicable)
+5. **Visualization:** Interactive Next.js dashboard with Recharts (tables and graphs per insight where applicable)
+6. **Reporting:** Comprehensive documentation of findings and recommendations; proposal, report, and dashboard as deliverables
 
 ---
 

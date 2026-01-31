@@ -58,7 +58,7 @@ The analysis reveals that:
 3. Certain product categories consistently outperform others
 4. Review volume is a strong indicator of product success
 
-This report provides actionable insights for pricing optimization, category management, and customer satisfaction improvement strategies.
+An interactive Next.js dashboard (deployable on Vercel) presents summary metrics, category and price-range charts, top 5 rated products, product keywords, price vs discount distribution, price–rating correlation (scatter with rating axis 3–5), discount impact analysis, and clickable Data Insights cards with tables/charts per EDA question. This report provides actionable insights for pricing optimization, category management, and customer satisfaction improvement strategies.
 
 ---
 
@@ -81,7 +81,7 @@ The technical objectives of this project are to:
 2. **Data Preprocessing:** Clean and transform raw data into a format suitable for analysis
 3. **Statistical Analysis:** Perform correlation analysis, hypothesis testing, and pattern identification
 4. **Predictive Modeling:** Develop models to predict product ratings based on features like price, discount, and category
-5. **Visualization:** Create interactive dashboards and visualizations to communicate insights effectively
+5. **Visualization:** Create an interactive Next.js dashboard (Recharts, Tailwind) with summary cards, dual-axis charts (category, price range, discount impact), top 5 products table, product keywords chart, price vs discount distribution, price–rating scatter (Y-axis 3–5), and Data Insights modals with tables/charts per EDA question
 6. **Insight Extraction:** Derive actionable business recommendations from data analysis
 
 ### 2.3 Research Questions
@@ -444,6 +444,42 @@ Created aggregated datasets for analysis:
 2. **Quality Focus:** Maintain product quality to sustain high ratings
 3. **Response Strategy:** Engage with customer feedback to improve products
 
+### 5.6 Dashboard System
+
+An interactive web dashboard was developed to present the analysis results. It is built with **Next.js 14**, **React 18**, **TypeScript**, **Tailwind CSS**, and **Recharts**, and is deployable on **Vercel** (free tier).
+
+#### 5.6.1 Dashboard Structure and Sections
+
+The dashboard is organized as follows:
+
+1. **Summary statistics (cards):** Total products, total categories, average rating, average price; plus average discount and total reviews in a second row.
+
+2. **Category Performance:** Composed chart with dual Y-axes—product count (bars, left axis) and average rating (line, right axis, scale 3–5)—for the top 10 categories by product count.
+
+3. **Price Range Analysis:** Composed chart with dual Y-axes—product count (bars) and average rating (line, scale 3–5)—by price ranges (0–500, 500–1000, 1000–2000, 2000–5000, 5000+).
+
+4. **Top Rated Products:** Table of the **top 5** products by rating (product name, category, rating, review count, discounted price).
+
+5. **Product Keywords:** Horizontal bar chart of the top 20 keywords extracted from product names (e.g. USB, charging, cables).
+
+6. **Price vs Discount Distribution:** Bar chart of product counts by price range (0–500, 500–1k, 1k–2k, 2k–5k, 5k–10k, 10k+), comparing discounted price counts vs actual price counts.
+
+7. **Price–Rating Correlation:** Correlation coefficient (weak positive, ~0.12) plus a scatter plot of discounted price vs rating; **Y-axis (rating) domain is set to [3, 5]** to focus on the range where most points lie.
+
+8. **Discount Impact Analysis:** Composed chart with dual Y-axes—product count (bars, left) and average rating (line, right, scale 3–5)—by discount range (0–10%, 10–20%, …, 50%+).
+
+9. **Data Insights:** Six clickable cards (Rating by Category, Top Products by Reviews, Discount by Category, Popular Products, Review Sentiment, Top 5 Categories). Each card opens a modal with a **data table or chart** for that question and a short insight paragraph. Product Keywords, Price vs Discount, and Price–Rating Correlation are not repeated here; they appear only as full dashboard sections above.
+
+#### 5.6.2 Data Pipeline
+
+- **process_data.py** reads `amazon_sales_data.csv`, cleans prices/ratings/discounts, computes category/price-range/discount-range aggregates, and writes JSON files to `dashboard_data/` (and the dashboard’s `public/dashboard_data/`). Per-question datasets (e.g. `insight_q1_avg_rating_by_category.json` through `insight_q9_top5_categories.json`) feed the Data Insights modals and the main charts.
+
+#### 5.6.3 Technologies
+
+- **Frontend:** Next.js (App Router), React, TypeScript, Tailwind CSS, Lucide React icons
+- **Charts:** Recharts (BarChart, LineChart, ComposedChart, ScatterChart)
+- **Deployment:** Vercel (Next.js detected; root directory set to `dashboard` when the app lives in a subfolder)
+
 ---
 
 ## 6. Conclusion
@@ -533,24 +569,43 @@ This project demonstrates the power of data science in extracting actionable ins
 
 See `process_data.py` for complete data cleaning and preprocessing code.
 
-### 8.2 Visualization Code
+### 8.2 Visualization and Dashboard Code
 
-See dashboard implementation in `dashboard/` directory for all visualization code.
+- **Dashboard:** Next.js app in `dashboard/` (App Router, `app/page.tsx`, `components/` for StatCard, CategoryChart, PriceRangeChart, DiscountChart, TopProductsTable, ProductKeywordsChart, PriceVsDiscountChart, PriceRatingCorrelationChart, InsightsQASection, InsightDetailView).
+- **Data processing:** `process_data.py` in project root generates all JSON under `dashboard_data/` and feeds `dashboard/public/dashboard_data/`.
 
-### 8.3 Sample Visualizations
+### 8.3 Dashboard and Visualizations
 
-[Note: Visualizations will be included in the dashboard system]
+The dashboard (in the `dashboard/` directory) provides all visualizations:
 
-### 8.4 Statistical Tables
+- **Summary cards:** From `summary_stats.json`
+- **Category Performance, Price Range Analysis, Discount Impact:** From `category_stats.json`, `price_range_stats.json`, `discount_stats.json` (dual-axis composed charts)
+- **Top Rated Products (5):** From `top_rated_products.json`
+- **Product Keywords:** From `insight_q6_keywords.json` (horizontal bar chart)
+- **Price vs Discount Distribution:** From `insight_q3_price_distribution.json` (bar chart)
+- **Price–Rating Correlation:** From `insight_q8_correlation.json` (scatter plot; rating axis 3–5)
+- **Data Insights modals:** From `insights_qa.json` plus `insight_q1_*.json` through `insight_q9_*.json` (tables/charts per question)
 
-**Category Performance Summary:**
-- See `dashboard_data/category_stats.json` for detailed category statistics
+### 8.4 Statistical Tables and Generated Data
 
-**Price Range Analysis:**
-- See `dashboard_data/price_range_stats.json` for price range breakdown
+**Main aggregates:**
+- `dashboard_data/summary_stats.json` — overall metrics
+- `dashboard_data/category_stats.json` — category-level statistics
+- `dashboard_data/price_range_stats.json` — price range breakdown
+- `dashboard_data/discount_stats.json` — discount range statistics
+- `dashboard_data/top_rated_products.json` — top-rated products (dashboard shows top 5)
+- `dashboard_data/top_categories.json` — top categories by rating
 
-**Discount Analysis:**
-- See `dashboard_data/discount_stats.json` for discount range statistics
+**Per-question insight data (for Data Insights modals and dashboard charts):**
+- `insight_q1_avg_rating_by_category.json` — Q1: average rating by category
+- `insight_q2_top_products_by_category.json` — Q2: top products by review count per category
+- `insight_q3_price_distribution.json` — Q3: price distribution (used in Price vs Discount dashboard section)
+- `insight_q4_avg_discount_by_category.json` — Q4: average discount by category
+- `insight_q5_popular_products.json` — Q5: popular product names
+- `insight_q6_keywords.json` — Q6: product keywords (used in Product Keywords dashboard section)
+- `insight_q7_popular_reviews.json` — Q7: popular review titles
+- `insight_q8_correlation.json` — Q8: price–rating correlation and scatter sample (used in Price–Rating Correlation dashboard section)
+- `insight_q9_top5_categories.json` — Q9: top 5 categories by rating
 
 ### 8.5 Model Performance Metrics
 
@@ -558,10 +613,12 @@ See dashboard implementation in `dashboard/` directory for all visualization cod
 
 ### 8.6 References
 
-1. Kaggle Dataset: Amazon Sales Dataset
+1. Kaggle Dataset: Amazon Sales Dataset — https://www.kaggle.com/datasets/karkavelrajaj/amazon-sales-dataset
 2. Pandas Documentation: https://pandas.pydata.org/
 3. Scikit-learn Documentation: https://scikit-learn.org/
 4. Next.js Documentation: https://nextjs.org/
+5. Recharts Documentation: https://recharts.org/
+6. Vercel Deployment: https://vercel.com/docs
 
 ---
 

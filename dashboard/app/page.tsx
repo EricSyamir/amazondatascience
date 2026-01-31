@@ -9,6 +9,7 @@ import TopProductsTable from '@/components/TopProductsTable'
 import ProductKeywordsChart from '@/components/ProductKeywordsChart'
 import PriceVsDiscountChart from '@/components/PriceVsDiscountChart'
 import PriceRatingCorrelationChart from '@/components/PriceRatingCorrelationChart'
+import BusinessInsights from '@/components/BusinessInsights'
 import InsightsQASection from '@/components/InsightsQASection'
 import { TrendingUp, Package, Star, DollarSign } from 'lucide-react'
 
@@ -170,6 +171,9 @@ export default function Home() {
           </h2>
           <DiscountChart />
         </div>
+
+        {/* Business Insights - Statistical Hypothesis Tests */}
+        <BusinessInsights />
 
         {/* Insights & Q&A from EDA (excluding Product Keywords, Price vs Discount, Price–Rating Correlation) */}
         <InsightsQASection />

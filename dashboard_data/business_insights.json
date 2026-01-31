@@ -1,0 +1,113 @@
+[
+  {
+    "id": "insight1",
+    "question": "Do discounts hurt quality perception?",
+    "hypothesis": "H0: Average rating of high-discount products = average rating of low-discount products",
+    "test": "Two-sample t-test",
+    "high_discount_mean": 4.077,
+    "low_discount_mean": 4.165,
+    "high_discount_count": 1133,
+    "low_discount_count": 331,
+    "t_statistic": -4.8635,
+    "p_value": 1e-06,
+    "significant": true,
+    "interpretation": "High discounts have significantly different ratings than low discounts",
+    "recommendation": "Avoid over-discounting core products"
+  },
+  {
+    "id": "insight2",
+    "question": "Do discounts drive engagement?",
+    "hypothesis": "H0: Mean rating_count for high-discount products = mean rating_count for low-discount products",
+    "test": "One-sided two-sample t-test",
+    "high_discount_mean_reviews": 18253.4,
+    "low_discount_mean_reviews": 18439.0,
+    "t_statistic": -0.0695,
+    "p_value": 0.944604,
+    "significant": false,
+    "interpretation": "High-discount products have similar reviews than low-discount products",
+    "recommendation": "Discounts do not significantly drive engagement"
+  },
+  {
+    "id": "insight3",
+    "question": "Which categories are strong/weak?",
+    "hypothesis": "H0: Mean rating for top categories = mean rating for bottom categories",
+    "test": "Two-sample t-test",
+    "top_categories_mean": 4.52,
+    "bottom_categories_mean": 3.471,
+    "top_categories": [
+      "Tablets",
+      "Memory",
+      "PowerLANAdapters"
+    ],
+    "bottom_categories": [
+      "ElectricGrinders",
+      "DustCovers",
+      "PCHeadsets"
+    ],
+    "t_statistic": 10.6585,
+    "p_value": 1e-06,
+    "significant": true,
+    "interpretation": "Top categories have significantly higher ratings than bottom categories",
+    "recommendation": "Focus on high-performing categories; investigate low-performing ones"
+  },
+  {
+    "id": "insight4",
+    "question": "Do expensive items get better ratings?",
+    "hypothesis": "H0: Mean rating is the same across price tiers",
+    "test": "One-way ANOVA",
+    "tier_means": {
+      "Low": 4.071,
+      "Mid": 4.093,
+      "High": 4.128
+    },
+    "f_statistic": 4.6781,
+    "p_value": 0.009437,
+    "significant": true,
+    "interpretation": "Price tiers have significantly different ratings",
+    "recommendation": "Focus on High price segment"
+  },
+  {
+    "id": "insight5",
+    "question": "Different discount strategies per category?",
+    "hypothesis": "H0: Mean discount_percentage is equal across all categories",
+    "test": "One-way ANOVA",
+    "category_discount_means": {
+      "USBCables": 59.38,
+      "SmartWatches": 69.82,
+      "Smartphones": 23.29,
+      "SmartTelevisions": 38.29,
+      "In-Ear": 58.27
+    },
+    "f_statistic": 61.5474,
+    "p_value": 0.0,
+    "significant": true,
+    "interpretation": "Categories have significantly different discount levels",
+    "recommendation": "Adjust pricing policy - some categories are over-subsidized"
+  },
+  {
+    "id": "insight6",
+    "question": "Correlation: discount vs rating",
+    "hypothesis": "H0: Correlation \u03c1 = 0",
+    "test": "Pearson correlation test",
+    "correlation": -0.1554,
+    "p_value": 0.0,
+    "significant": true,
+    "interpretation": "Discount and rating are significantly correlated",
+    "recommendation": "Discounts do affect ratings"
+  },
+  {
+    "id": "insight7",
+    "question": "Quality of best-sellers",
+    "hypothesis": "H0: Mean rating of top products = mean rating of other products",
+    "test": "One-sided two-sample t-test",
+    "top_products_mean": 4.166,
+    "other_products_mean": 4.089,
+    "top_products_count": 147,
+    "other_products_count": 1315,
+    "t_statistic": 3.0677,
+    "p_value": 0.002197,
+    "significant": true,
+    "interpretation": "Top products have significantly higher ratings than others",
+    "recommendation": "Best-sellers are truly higher quality"
+  }
+]

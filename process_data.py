@@ -8,6 +8,7 @@ import numpy as np
 import json
 import re
 from collections import Counter
+from scipy import stats
 
 # Read the dataset
 print("Loading data...")
@@ -235,7 +236,161 @@ df_clean = df[[
 
 df_clean.to_csv('dashboard_data/cleaned_data.csv', index=False)
 
+# --- Business Insights: Statistical Hypothesis Tests ---
+print("\nComputing Business Insights (statistical tests)...")
+
+business_insights = []
+
+# 1. Discounts vs Ratings (Do discounts hurt quality perception?)
+high_discount = df[df['discount_percentage_clean'] >= 30]['rating_clean'].dropna()
+low_discount = df[df['discount_percentage_clean'] < 30]['rating_clean'].dropna()
+if len(high_discount) > 0 and len(low_discount) > 0:
+    t_stat, p_value = stats.ttest_ind(high_discount, low_discount)
+    business_insights.append({
+        'id': 'insight1',
+        'question': 'Do discounts hurt quality perception?',
+        'hypothesis': 'H0: Average rating of high-discount products = average rating of low-discount products',
+        'test': 'Two-sample t-test',
+        'high_discount_mean': round(float(high_discount.mean()), 3),
+        'low_discount_mean': round(float(low_discount.mean()), 3),
+        'high_discount_count': int(len(high_discount)),
+        'low_discount_count': int(len(low_discount)),
+        't_statistic': round(float(t_stat), 4),
+        'p_value': round(float(p_value), 6),
+        'significant': bool(p_value < 0.05),
+        'interpretation': 'High discounts have {} ratings than low discounts'.format('significantly different' if p_value < 0.05 else 'similar'),
+        'recommendation': 'Avoid over-discounting core products' if p_value < 0.05 and high_discount.mean() < low_discount.mean() else 'Discounts do not significantly impact quality perception'
+    })
+
+# 2. Discounts vs Popularity (Do discounts drive engagement?)
+high_disc_reviews = df[df['discount_percentage_clean'] >= 30]['rating_count_clean'].dropna()
+low_disc_reviews = df[df['discount_percentage_clean'] < 30]['rating_count_clean'].dropna()
+if len(high_disc_reviews) > 0 and len(low_disc_reviews) > 0:
+    t_stat, p_value = stats.ttest_ind(high_disc_reviews, low_disc_reviews)
+    business_insights.append({
+        'id': 'insight2',
+        'question': 'Do discounts drive engagement?',
+        'hypothesis': 'H0: Mean rating_count for high-discount products = mean rating_count for low-discount products',
+        'test': 'One-sided two-sample t-test',
+        'high_discount_mean_reviews': round(float(high_disc_reviews.mean()), 1),
+        'low_discount_mean_reviews': round(float(low_disc_reviews.mean()), 1),
+        't_statistic': round(float(t_stat), 4),
+        'p_value': round(float(p_value), 6),
+        'significant': bool(p_value < 0.05),
+        'interpretation': 'High-discount products have {} reviews than low-discount products'.format('significantly more' if p_value < 0.05 and high_disc_reviews.mean() > low_disc_reviews.mean() else 'similar'),
+        'recommendation': 'Discounts increase engagement' if p_value < 0.05 and high_disc_reviews.mean() > low_disc_reviews.mean() else 'Discounts do not significantly drive engagement'
+    })
+
+# 3. Category Quality Comparison (Which categories are strong/weak?)
+# Top 5 vs Bottom 5 categories by avg rating
+top_cats = category_stats.nlargest(5, 'avg_rating')['category'].tolist()
+bottom_cats = category_stats.nsmallest(5, 'avg_rating')['category'].tolist()
+top_cat_ratings = df[df['category'].isin(top_cats)]['rating_clean'].dropna()
+bottom_cat_ratings = df[df['category'].isin(bottom_cats)]['rating_clean'].dropna()
+if len(top_cat_ratings) > 0 and len(bottom_cat_ratings) > 0:
+    t_stat, p_value = stats.ttest_ind(top_cat_ratings, bottom_cat_ratings)
+    business_insights.append({
+        'id': 'insight3',
+        'question': 'Which categories are strong/weak?',
+        'hypothesis': 'H0: Mean rating for top categories = mean rating for bottom categories',
+        'test': 'Two-sample t-test',
+        'top_categories_mean': round(float(top_cat_ratings.mean()), 3),
+        'bottom_categories_mean': round(float(bottom_cat_ratings.mean()), 3),
+        'top_categories': [cat.split('|')[-1] for cat in top_cats[:3]],
+        'bottom_categories': [cat.split('|')[-1] for cat in bottom_cats[:3]],
+        't_statistic': round(float(t_stat), 4),
+        'p_value': round(float(p_value), 6),
+        'significant': bool(p_value < 0.05),
+        'interpretation': 'Top categories have {} ratings than bottom categories'.format('significantly higher' if p_value < 0.05 else 'similar'),
+        'recommendation': 'Focus on high-performing categories; investigate low-performing ones' if p_value < 0.05 else 'Category ratings are similar'
+    })
+
+# 4. Price Tier vs Rating (Do expensive items get better ratings?)
+df['price_tier'] = pd.qcut(df['discounted_price_clean'], q=3, labels=['Low', 'Mid', 'High'], duplicates='drop')
+price_tiers = df.groupby('price_tier', observed=False)['rating_clean'].apply(lambda x: x.dropna().tolist())
+if len(price_tiers) >= 3:
+    f_stat, p_value = stats.f_oneway(*price_tiers.values)
+    tier_means = {tier: round(float(df[df['price_tier'] == tier]['rating_clean'].mean()), 3) for tier in ['Low', 'Mid', 'High'] if tier in df['price_tier'].values}
+    business_insights.append({
+        'id': 'insight4',
+        'question': 'Do expensive items get better ratings?',
+        'hypothesis': 'H0: Mean rating is the same across price tiers',
+        'test': 'One-way ANOVA',
+        'tier_means': tier_means,
+        'f_statistic': round(float(f_stat), 4),
+        'p_value': round(float(p_value), 6),
+        'significant': bool(p_value < 0.05),
+        'interpretation': 'Price tiers have {} ratings'.format('significantly different' if p_value < 0.05 else 'similar'),
+        'recommendation': 'Focus on {} price segment'.format(max(tier_means, key=tier_means.get)) if p_value < 0.05 else 'Price does not significantly affect ratings'
+    })
+
+# 5. Discount Level Differences by Category
+# ANOVA: discount_percentage ~ category (top 10 categories by product count)
+top_10_cats = category_stats.nlargest(10, 'product_count')['category'].tolist()
+cat_discounts = df[df['category'].isin(top_10_cats)].groupby('category')['discount_percentage_clean'].apply(lambda x: x.dropna().tolist())
+if len(cat_discounts) >= 2:
+    f_stat, p_value = stats.f_oneway(*cat_discounts.values)
+    cat_discount_means = {cat.split('|')[-1]: round(float(df[df['category'] == cat]['discount_percentage_clean'].mean()), 2) for cat in top_10_cats[:5]}
+    business_insights.append({
+        'id': 'insight5',
+        'question': 'Different discount strategies per category?',
+        'hypothesis': 'H0: Mean discount_percentage is equal across all categories',
+        'test': 'One-way ANOVA',
+        'category_discount_means': cat_discount_means,
+        'f_statistic': round(float(f_stat), 4),
+        'p_value': round(float(p_value), 6),
+        'significant': bool(p_value < 0.05),
+        'interpretation': 'Categories have {} discount levels'.format('significantly different' if p_value < 0.05 else 'similar'),
+        'recommendation': 'Adjust pricing policy - some categories are over-subsidized' if p_value < 0.05 else 'Discount strategies are consistent across categories'
+    })
+
+# 6. Correlation: discount_percentage vs rating
+discount_rating_corr = df['discount_percentage_clean'].corr(df['rating_clean'])
+# Test H0: correlation = 0
+n = len(df[['discount_percentage_clean', 'rating_clean']].dropna())
+if n > 2:
+    t_corr = discount_rating_corr * np.sqrt((n - 2) / (1 - discount_rating_corr**2))
+    p_value_corr = 2 * (1 - stats.t.cdf(abs(t_corr), n - 2))
+    business_insights.append({
+        'id': 'insight6',
+        'question': 'Correlation: discount vs rating',
+        'hypothesis': 'H0: Correlation ρ = 0',
+        'test': 'Pearson correlation test',
+        'correlation': round(float(discount_rating_corr), 4),
+        'p_value': round(float(p_value_corr), 6),
+        'significant': bool(p_value_corr < 0.05),
+        'interpretation': 'Discount and rating are {} correlated'.format('significantly' if p_value_corr < 0.05 else 'not significantly'),
+        'recommendation': 'Discounts {} affect ratings'.format('do' if p_value_corr < 0.05 else 'do not significantly')
+    })
+
+# 7. Top Products vs Others (Quality of best-sellers)
+top_10_pct_threshold = df['rating_count_clean'].quantile(0.9)
+top_products = df[df['rating_count_clean'] >= top_10_pct_threshold]['rating_clean'].dropna()
+other_products = df[df['rating_count_clean'] < top_10_pct_threshold]['rating_clean'].dropna()
+if len(top_products) > 0 and len(other_products) > 0:
+    t_stat, p_value = stats.ttest_ind(top_products, other_products)
+    business_insights.append({
+        'id': 'insight7',
+        'question': 'Quality of best-sellers',
+        'hypothesis': 'H0: Mean rating of top products = mean rating of other products',
+        'test': 'One-sided two-sample t-test',
+        'top_products_mean': round(float(top_products.mean()), 3),
+        'other_products_mean': round(float(other_products.mean()), 3),
+        'top_products_count': int(len(top_products)),
+        'other_products_count': int(len(other_products)),
+        't_statistic': round(float(t_stat), 4),
+        'p_value': round(float(p_value), 6),
+        'significant': bool(p_value < 0.05),
+        'interpretation': 'Top products have {} ratings than others'.format('significantly higher' if p_value < 0.05 and top_products.mean() > other_products.mean() else 'similar'),
+        'recommendation': 'Best-sellers are truly higher quality' if p_value < 0.05 and top_products.mean() > other_products.mean() else 'Best-sellers have similar quality to others'
+    })
+
+# Save business insights
+with open('dashboard_data/business_insights.json', 'w', encoding='utf-8') as f:
+    json.dump(business_insights, f, indent=2)
+
 print("\nData processing complete!")
 print(f"\nSummary Statistics:")
 for key, value in summary_stats.items():
     print(f"  {key}: {value}")
+print(f"\nBusiness Insights computed: {len(business_insights)}")

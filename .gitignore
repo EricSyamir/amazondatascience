@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Next.js
+dashboard/.next/
+dashboard/out/
+dashboard/build/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Vercel
+.vercel
+
+# Misc
+*.log
+.env*.local

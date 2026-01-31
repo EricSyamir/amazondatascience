@@ -1,0 +1,27 @@
+[
+  {
+    "price_range":"0-500",
+    "avg_rating":4.07,
+    "product_count":576
+  },
+  {
+    "price_range":"500-1000",
+    "avg_rating":4.12,
+    "product_count":252
+  },
+  {
+    "price_range":"1000-2000",
+    "avg_rating":4.07,
+    "product_count":275
+  },
+  {
+    "price_range":"2000-5000",
+    "avg_rating":4.09,
+    "product_count":156
+  },
+  {
+    "price_range":"5000+",
+    "avg_rating":4.17,
+    "product_count":206
+  }
+]

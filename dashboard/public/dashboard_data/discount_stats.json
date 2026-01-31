@@ -1,0 +1,32 @@
+[
+  {
+    "discount_range":"0-10%",
+    "avg_rating":4.16,
+    "product_count":35
+  },
+  {
+    "discount_range":"10-20%",
+    "avg_rating":4.14,
+    "product_count":96
+  },
+  {
+    "discount_range":"20-30%",
+    "avg_rating":4.15,
+    "product_count":164
+  },
+  {
+    "discount_range":"30-40%",
+    "avg_rating":4.1,
+    "product_count":174
+  },
+  {
+    "discount_range":"40-50%",
+    "avg_rating":4.1,
+    "product_count":252
+  },
+  {
+    "discount_range":"50%+",
+    "avg_rating":4.06,
+    "product_count":695
+  }
+]

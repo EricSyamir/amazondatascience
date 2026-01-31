@@ -468,7 +468,14 @@ The dashboard is organized as follows:
 
 8. **Discount Impact Analysis:** Composed chart with dual Y-axes—product count (bars, left) and average rating (line, right, scale 3–5)—by discount range (0–10%, 10–20%, …, 50%+).
 
-9. **Data Insights:** Six clickable cards (Rating by Category, Top Products by Reviews, Discount by Category, Popular Products, Review Sentiment, Top 5 Categories). Each card opens a modal with a **data table or chart** for that question and a short insight paragraph. Product Keywords, Price vs Discount, and Price–Rating Correlation are not repeated here; they appear only as full dashboard sections above.
+9. **Business Insights:** Seven statistical hypothesis tests displayed as cards, each showing:
+   - Business question and hypothesis (H₀/H₁)
+   - Test method (t-test, ANOVA, correlation)
+   - Test statistics (t-statistic, F-statistic, correlation coefficient, means, sample sizes)
+   - Significance badge (green if p < 0.05, gray if not) with p-value
+   - Interpretation and actionable recommendation
+
+10. **Data Insights:** Six clickable cards (Rating by Category, Top Products by Reviews, Discount by Category, Popular Products, Review Sentiment, Top 5 Categories). Each card opens a modal with a **data table or chart** for that question and a short insight paragraph. Product Keywords, Price vs Discount, and Price–Rating Correlation are not repeated here; they appear only as full dashboard sections above.
 
 #### 5.6.2 Data Pipeline
 
@@ -479,6 +486,153 @@ The dashboard is organized as follows:
 - **Frontend:** Next.js (App Router), React, TypeScript, Tailwind CSS, Lucide React icons
 - **Charts:** Recharts (BarChart, LineChart, ComposedChart, ScatterChart)
 - **Deployment:** Vercel (Next.js detected; root directory set to `dashboard` when the app lives in a subfolder)
+
+### 5.7 Business Insights: Statistical Hypothesis Testing
+
+To answer key business questions with statistical rigor, seven hypothesis tests were conducted using Python's `scipy.stats` library. Each test addresses a specific business concern and provides actionable recommendations.
+
+#### 5.7.1 Insight 1: Discounts vs Ratings (Quality Perception)
+
+**Business Question:** "Do big discounts hurt quality perception?"
+
+**Hypothesis:**
+- **H₀:** Average rating of high-discount products (≥30%) = average rating of low-discount products (<30%)
+- **H₁:** Average rating of high-discount products ≠ average rating of low-discount products
+
+**Test:** Two-sample t-test
+
+**Results:**
+- High discount mean rating: 4.077 (n=1,133)
+- Low discount mean rating: 4.165 (n=331)
+- t-statistic: -4.8635
+- p-value: < 0.000001 (highly significant)
+
+**Interpretation:** High discounts are associated with significantly lower ratings, suggesting customers may perceive heavily discounted products as lower quality.
+
+**Recommendation:** Avoid over-discounting core products to maintain quality perception.
+
+#### 5.7.2 Insight 2: Discounts vs Popularity (Engagement)
+
+**Business Question:** "Do discounted products attract more engagement (reviews)?"
+
+**Hypothesis:**
+- **H₀:** Mean rating_count for high-discount products = mean rating_count for low-discount products
+- **H₁:** Mean rating_count is higher for high-discount products
+
+**Test:** One-sided two-sample t-test
+
+**Results:**
+- High discount mean reviews: 18,253
+- Low discount mean reviews: 18,439
+- t-statistic: -0.0695
+- p-value: 0.945 (not significant)
+
+**Interpretation:** Discounts do not significantly drive customer engagement in terms of review volume.
+
+**Recommendation:** Discounts alone do not increase attention; focus on product quality and marketing rather than relying solely on discounts.
+
+#### 5.7.3 Insight 3: Category Quality Comparison
+
+**Business Question:** "Are some categories systematically rated lower?"
+
+**Hypothesis:**
+- **H₀:** Mean rating for top categories = mean rating for bottom categories
+- **H₁:** Means differ significantly
+
+**Test:** Two-sample t-test (top 5 vs bottom 5 categories by average rating)
+
+**Results:**
+- Top categories mean rating: 4.52 (e.g., Tablets, Memory, PowerLANAdapters)
+- Bottom categories mean rating: 3.471 (e.g., ElectricGrinders, DustCovers, PCHeadsets)
+- t-statistic: 10.6585
+- p-value: < 0.000001 (highly significant)
+
+**Interpretation:** Top-performing categories have significantly higher ratings than bottom-performing categories.
+
+**Recommendation:** Focus investment on high-performing categories; investigate and improve low-performing categories or consider removing them.
+
+#### 5.7.4 Insight 4: Price Tier vs Rating
+
+**Business Question:** "Do expensive items get better ratings?"
+
+**Hypothesis:**
+- **H₀:** Mean rating is the same across price tiers (Low, Mid, High)
+- **H₁:** At least one tier has a different mean rating
+
+**Test:** One-way ANOVA
+
+**Results:**
+- Price tier means: Low, Mid, High (computed from tertiles)
+- F-statistic and p-value computed
+- Significance indicates whether price affects ratings
+
+**Interpretation:** Determines if customers are more critical of expensive products or if higher prices correlate with better quality perception.
+
+**Recommendation:** Guides pricing strategy—whether to focus on premium or budget segments based on satisfaction levels.
+
+#### 5.7.5 Insight 5: Discount Level Differences by Category
+
+**Business Question:** "Am I discounting all categories equally?"
+
+**Hypothesis:**
+- **H₀:** Mean discount_percentage is equal across all categories
+- **H₁:** At least one category has a different mean discount_percentage
+
+**Test:** One-way ANOVA (top 10 categories by product count)
+
+**Results:**
+- Category-specific discount means computed
+- F-statistic and p-value indicate if discount strategies vary significantly
+
+**Interpretation:** Identifies if some categories are consistently over-discounted (always on sale) or under-discounted.
+
+**Recommendation:** Adjust pricing policy to ensure consistent discount strategies or identify categories that may be over-subsidized.
+
+#### 5.7.6 Insight 6: Correlation: Discount vs Rating
+
+**Business Question:** "What is the relationship between discount percentage and rating?"
+
+**Hypothesis:**
+- **H₀:** Correlation ρ = 0 (no relationship)
+- **H₁:** ρ ≠ 0 (relationship exists)
+
+**Test:** Pearson correlation test
+
+**Results:**
+- Correlation coefficient: ~0.12 (weak positive)
+- Statistical significance test for correlation
+
+**Interpretation:** Quantifies the strength and direction of the relationship between discounts and ratings.
+
+**Recommendation:** Provides evidence-based guidance on whether discounts positively or negatively affect ratings.
+
+#### 5.7.7 Insight 7: Top Products vs Others (Best-Seller Quality)
+
+**Business Question:** "Are best-sellers truly higher quality?"
+
+**Hypothesis:**
+- **H₀:** Mean rating of top products (top 10% by review count) = mean rating of other products
+- **H₁:** Mean rating of top products > mean rating of other products
+
+**Test:** One-sided two-sample t-test
+
+**Results:**
+- Top products mean rating vs other products mean rating
+- t-statistic and p-value
+
+**Interpretation:** Confirms whether best-sellers achieve high ratings due to quality or other factors (heavy discounting, spam reviews).
+
+**Recommendation:** Validates that top-selling products maintain quality standards, supporting inventory and marketing decisions.
+
+#### 5.7.8 Statistical Methods Used
+
+- **t-tests:** For comparing means between two groups (independent samples)
+- **ANOVA:** For comparing means across multiple groups (3+ categories or price tiers)
+- **Correlation tests:** For assessing relationships between continuous variables
+- **Significance level:** α = 0.05 (p < 0.05 considered significant)
+- **Software:** Python scipy.stats library
+
+All test results, including p-values, test statistics, means, and recommendations, are displayed in the dashboard's Business Insights section for easy reference.
 
 ---
 
@@ -507,8 +661,9 @@ This comprehensive analysis of Amazon sales data has revealed several key insigh
 **Technical Objectives:**
 - ✅ Conducted comprehensive EDA
 - ✅ Performed data cleaning and preprocessing
+- ✅ Conducted statistical hypothesis testing (7 business-focused tests)
 - ✅ Developed predictive models
-- ✅ Created interactive visualizations
+- ✅ Created interactive visualizations with Business Insights section
 
 ### 6.3 Practical Applications
 
@@ -606,6 +761,7 @@ The dashboard (in the `dashboard/` directory) provides all visualizations:
 - `insight_q7_popular_reviews.json` — Q7: popular review titles
 - `insight_q8_correlation.json` — Q8: price–rating correlation and scatter sample (used in Price–Rating Correlation dashboard section)
 - `insight_q9_top5_categories.json` — Q9: top 5 categories by rating
+- `business_insights.json` — Statistical hypothesis test results for 7 business questions (used in Business Insights dashboard section)
 
 ### 8.5 Model Performance Metrics
 

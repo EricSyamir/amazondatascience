@@ -38,6 +38,14 @@ The project includes an interactive web dashboard built with Next.js, React, and
 - **Product Keywords:** Bar chart of most frequent keywords from product names
 - **Price vs Discount Distribution:** Bar chart of product counts by price range (discounted vs actual)
 - **Price–Rating Correlation:** Scatter plot with correlation value (rating axis 3–5 for clarity)
+- **Business Insights:** Statistical hypothesis tests answering 7 key business questions:
+  1. Discounts vs Ratings (Do discounts hurt quality perception?) — Two-sample t-test
+  2. Discounts vs Popularity (Do discounts drive engagement?) — One-sided t-test
+  3. Category Quality Comparison (Which categories are strong/weak?) — t-test
+  4. Price Tier vs Rating (Do expensive items get better ratings?) — One-way ANOVA
+  5. Discount Level Differences by Category — ANOVA
+  6. Correlation: discount vs rating — Pearson correlation test
+  7. Top Products vs Others (Quality of best-sellers) — One-sided t-test
 - **Data Insights:** Clickable cards linking to EDA questions with tables/charts (rating by category, top products by reviews, discount by category, popular products, review sentiment, top 5 categories)
 
 ---
@@ -148,9 +156,10 @@ The project will follow the standard data science workflow:
 1. **Data Understanding:** Exploratory data analysis to understand data structure and quality
 2. **Data Preparation:** Cleaning, preprocessing, and feature engineering (Python; output: JSON/CSV for dashboard)
 3. **Data Analysis:** Statistical analysis, correlation studies, and pattern identification (including per-question datasets for EDA Q1–Q9)
-4. **Modeling:** Predictive models for ratings and sales potential (as applicable)
-5. **Visualization:** Interactive Next.js dashboard with Recharts (tables and graphs per insight where applicable)
-6. **Reporting:** Comprehensive documentation of findings and recommendations; proposal, report, and dashboard as deliverables
+4. **Statistical Hypothesis Testing:** Conduct 7 business-focused hypothesis tests (t-tests, ANOVA, correlation tests) to answer key business questions with statistical rigor
+5. **Modeling:** Predictive models for ratings and sales potential (as applicable)
+6. **Visualization:** Interactive Next.js dashboard with Recharts (tables and graphs per insight where applicable, plus Business Insights section)
+7. **Reporting:** Comprehensive documentation of findings and recommendations; proposal, report, and dashboard as deliverables
 
 ---
 

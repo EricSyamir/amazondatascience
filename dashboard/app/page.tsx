@@ -75,13 +75,13 @@ export default function Home() {
             />
             <StatCard
               title="Avg Rating"
-              value={summaryStats.avg_rating.toFixed(2)}
+              value={(summaryStats.avg_rating ?? 0).toFixed(2)}
               icon={<Star className="w-8 h-8" />}
               color="yellow"
             />
             <StatCard
               title="Avg Price"
-              value={`₹${summaryStats.avg_price.toFixed(0)}`}
+              value={`₹${(summaryStats.avg_price ?? 0).toFixed(0)}`}
               icon={<DollarSign className="w-8 h-8" />}
               color="purple"
             />
@@ -96,7 +96,7 @@ export default function Home() {
                 Average Discount
               </h3>
               <p className="text-3xl font-bold text-indigo-600">
-                {summaryStats.avg_discount.toFixed(1)}%
+                {(summaryStats.avg_discount ?? 0).toFixed(1)}%
               </p>
             </div>
             <div className="bg-white rounded-lg shadow-md p-6">
@@ -104,7 +104,7 @@ export default function Home() {
                 Total Reviews
               </h3>
               <p className="text-3xl font-bold text-green-600">
-                {summaryStats.total_reviews.toLocaleString()}
+                {(summaryStats.total_reviews ?? 0).toLocaleString()}
               </p>
             </div>
           </div>

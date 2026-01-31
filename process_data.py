@@ -100,8 +100,13 @@ discount_stats = df.groupby('discount_range', observed=False).agg({
 discount_stats.columns = ['avg_rating', 'product_count']
 discount_stats = discount_stats.reset_index()
 
-# Top products by rating
+# Top products by rating (rename for dashboard compatibility)
 top_rated = df.nlargest(20, 'rating_clean')[['product_name', 'category', 'rating_clean', 'rating_count_clean', 'discounted_price_clean']]
+top_rated = top_rated.rename(columns={
+    'rating_clean': 'rating',
+    'rating_count_clean': 'rating_count',
+    'discounted_price_clean': 'discounted_price'
+})
 
 # Top categories by average rating
 top_categories = category_stats.nlargest(10, 'avg_rating')

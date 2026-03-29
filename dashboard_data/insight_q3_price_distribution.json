@@ -1,0 +1,32 @@
+[
+  {
+    "price_range": "0-500",
+    "discounted_count": 576,
+    "actual_count": 220
+  },
+  {
+    "price_range": "500-1k",
+    "discounted_count": 252,
+    "actual_count": 321
+  },
+  {
+    "price_range": "1k-2k",
+    "discounted_count": 275,
+    "actual_count": 329
+  },
+  {
+    "price_range": "2k-5k",
+    "discounted_count": 156,
+    "actual_count": 274
+  },
+  {
+    "price_range": "5k-10k",
+    "discounted_count": 84,
+    "actual_count": 132
+  },
+  {
+    "price_range": "10k+",
+    "discounted_count": 122,
+    "actual_count": 189
+  }
+]

@@ -1,0 +1,325 @@
+{
+  "correlation": 0.1203,
+  "scatter": {
+    "1": {
+      "price": 1055,
+      "rating": 3.8
+    },
+    "2": {
+      "price": 299,
+      "rating": 4
+    },
+    "3": {
+      "price": 320,
+      "rating": 4.2
+    },
+    "4": {
+      "price": 2169,
+      "rating": 4.1
+    },
+    "5": {
+      "price": 721,
+      "rating": 3.1
+    },
+    "6": {
+      "price": 1199,
+      "rating": 3.9
+    },
+    "7": {
+      "price": 519,
+      "rating": 4.3
+    },
+    "8": {
+      "price": 399,
+      "rating": 3.6
+    },
+    "9": {
+      "price": 479,
+      "rating": 4.2
+    },
+    "10": {
+      "price": 375,
+      "rating": 3.6
+    },
+    "11": {
+      "price": 59,
+      "rating": 4
+    },
+    "12": {
+      "price": 1499,
+      "rating": 4.3
+    },
+    "13": {
+      "price": 599,
+      "rating": 4.5
+    },
+    "14": {
+      "price": 1399,
+      "rating": 4.2
+    },
+    "15": {
+      "price": 10999,
+      "rating": 4.1
+    },
+    "16": {
+      "price": 799,
+      "rating": 4.3
+    },
+    "17": {
+      "price": 7349,
+      "rating": 4.2
+    },
+    "18": {
+      "price": 1499,
+      "rating": 3.9
+    },
+    "19": {
+      "price": 649,
+      "rating": 4.1
+    },
+    "20": {
+      "price": 354,
+      "rating": 4
+    },
+    "21": {
+      "price": 249,
+      "rating": 4.2
+    },
+    "22": {
+      "price": 399,
+      "rating": 4.2
+    },
+    "23": {
+      "price": 950,
+      "rating": 4.3
+    },
+    "24": {
+      "price": 1599,
+      "rating": 3.7
+    },
+    "25": {
+      "price": 299,
+      "rating": 4.2
+    },
+    "26": {
+      "price": 3799,
+      "rating": 4.2
+    },
+    "27": {
+      "price": 349,
+      "rating": 3.8
+    },
+    "28": {
+      "price": 2899,
+      "rating": 4.3
+    },
+    "29": {
+      "price": 1563,
+      "rating": 3.5
+    },
+    "30": {
+      "price": 1499,
+      "rating": 4.3
+    },
+    "31": {
+      "price": 1850,
+      "rating": 4
+    },
+    "32": {
+      "price": 4790,
+      "rating": 4
+    },
+    "33": {
+      "price": 129,
+      "rating": 4.1
+    },
+    "34": {
+      "price": 299,
+      "rating": 4
+    },
+    "35": {
+      "price": 879,
+      "rating": 4.4
+    },
+    "36": {
+      "price": 279,
+      "rating": 4
+    },
+    "37": {
+      "price": 195,
+      "rating": 3.7
+    },
+    "38": {
+      "price": 249,
+      "rating": 4.1
+    },
+    "39": {
+      "price": 129,
+      "rating": 4
+    },
+    "40": {
+      "price": 213,
+      "rating": 3.7
+    },
+    "41": {
+      "price": 299,
+      "rating": 4.3
+    },
+    "42": {
+      "price": 1190,
+      "rating": 3.8
+    },
+    "43": {
+      "price": 115,
+      "rating": 4
+    },
+    "44": {
+      "price": 137,
+      "rating": 4.4
+    },
+    "45": {
+      "price": 379,
+      "rating": 4.3
+    },
+    "46": {
+      "price": 980,
+      "rating": 4.2
+    },
+    "47": {
+      "price": 3498,
+      "rating": 3.4
+    },
+    "48": {
+      "price": 4098,
+      "rating": 4.5
+    },
+    "49": {
+      "price": 325,
+      "rating": 4.2
+    },
+    "50": {
+      "price": 399,
+      "rating": 4
+    },
+    "51": {
+      "price": 489,
+      "rating": 4.4
+    },
+    "52": {
+      "price": 499,
+      "rating": 3.9
+    },
+    "53": {
+      "price": 199,
+      "rating": 3.7
+    },
+    "54": {
+      "price": 8999,
+      "rating": 4
+    },
+    "55": {
+      "price": 238,
+      "rating": 4.4
+    },
+    "56": {
+      "price": 37247,
+      "rating": 4
+    },
+    "57": {
+      "price": 745,
+      "rating": 4
+    },
+    "58": {
+      "price": 1499,
+      "rating": 3.7
+    },
+    "59": {
+      "price": 970,
+      "rating": 4.2
+    },
+    "60": {
+      "price": 1399,
+      "rating": 4
+    },
+    "61": {
+      "price": 389,
+      "rating": 4.3
+    },
+    "62": {
+      "price": 184,
+      "rating": 4.2
+    },
+    "63": {
+      "price": 299,
+      "rating": 4
+    },
+    "64": {
+      "price": 379,
+      "rating": 4
+    },
+    "65": {
+      "price": 37999,
+      "rating": 4.3
+    },
+    "66": {
+      "price": 1099,
+      "rating": 4.2
+    },
+    "67": {
+      "price": 8699,
+      "rating": 4.2
+    },
+    "68": {
+      "price": 199,
+      "rating": 4.1
+    },
+    "69": {
+      "price": 349,
+      "rating": 4.5
+    },
+    "70": {
+      "price": 399,
+      "rating": 4.1
+    },
+    "71": {
+      "price": 349,
+      "rating": 4.4
+    },
+    "72": {
+      "price": 6120,
+      "rating": 4.6
+    },
+    "73": {
+      "price": 3349,
+      "rating": 4.3
+    },
+    "74": {
+      "price": 225,
+      "rating": 4.1
+    },
+    "75": {
+      "price": 949,
+      "rating": 4.1
+    },
+    "76": {
+      "price": 598,
+      "rating": 4.1
+    },
+    "77": {
+      "price": 139,
+      "rating": 4
+    },
+    "78": {
+      "price": 116,
+      "rating": 4.3
+    },
+    "79": {
+      "price": 249,
+      "rating": 5
+    },
+    "80": {
+      "price": 3685,
+      "rating": 4.1
+    }
+  }
+}

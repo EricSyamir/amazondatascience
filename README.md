@@ -7,15 +7,12 @@ This repository contains a complete Data Science group project analyzing Amazon 
 ## 📁 Project Structure
 
 ```
-DS/
-├── Project_Proposal.md          # Project proposal (Week 5 submission)
-├── Project_Report.md            # Comprehensive project report (Week 11 submission)
+├── README.md                    # This file - project overview
 ├── DEPLOYMENT_GUIDE.md          # Step-by-step Vercel deployment guide
-├── PROJECT_SUMMARY.md           # This file - project overview
 │
 ├── amazon_sales_data.csv        # Original dataset
-├── amazon-sales-dataset-eda.ipynb  # EDA notebook
-├── process_data.py              # Data processing script
+├── process_data.py              # Data processing script (Python)
+├── process_data.R               # Data processing script (R)
 │
 ├── dashboard_data/              # Processed data for dashboard
 │   ├── summary_stats.json
@@ -23,6 +20,7 @@ DS/
 │   ├── price_range_stats.json
 │   ├── discount_stats.json
 │   ├── top_rated_products.json
+│   ├── insight_*.json           # Per-question insight exports
 │   └── cleaned_data.csv
 │
 └── dashboard/                   # Next.js dashboard application
@@ -38,33 +36,9 @@ DS/
     └── README.md                # Dashboard README
 ```
 
-## ✅ Deliverables Checklist
+## ✅ Repository Contents
 
-### 1. Project Proposal ✓
-- **File:** `Project_Proposal.md`
-- **Submission:** Week 5
-- **Contents:**
-  - Project Introduction
-  - Objectives and Expected Outcomes
-  - Data Description
-  - Background/Problem Statement
-  - Methodology Overview
-
-### 2. Project Report ✓
-- **File:** `Project_Report.md`
-- **Submission:** Week 11
-- **Contents:**
-  - Cover Page
-  - Executive Summary
-  - Problem Description (Business & Technical Goals)
-  - Data Description with Schema
-  - Data Preparation Methods
-  - Solution (EDA, Analysis, Modeling)
-  - Conclusion
-  - Limitations and Future Improvements
-  - Appendix
-
-### 3. Dashboard System ✓
+### 1. Dashboard System ✓
 - **Location:** `dashboard/` folder
 - **Technology:** Next.js + React + TypeScript + Tailwind CSS + Recharts
 - **Features:**
@@ -106,7 +80,9 @@ To regenerate dashboard data:
 python process_data.py
 ```
 
-This will update all JSON files in `dashboard_data/` folder.
+This will update all JSON files in `dashboard_data/`.
+
+With R installed: `Rscript process_data.R` (from the repo root) does the same.
 
 ### Deploying to Vercel
 
@@ -140,10 +116,9 @@ See `DEPLOYMENT_GUIDE.md` for detailed instructions.
 ## 🛠️ Technologies Used
 
 ### Data Processing
-- Python 3
-- Pandas
-- NumPy
-- Regular Expressions
+- Python 3 (Pandas, NumPy)
+- R (optional alternative pipeline: dplyr, readr, jsonlite)
+- Regular expressions (price/discount cleaning)
 
 ### Dashboard
 - Next.js 14
@@ -156,35 +131,6 @@ See `DEPLOYMENT_GUIDE.md` for detailed instructions.
 ### Deployment
 - Vercel (hosting)
 - GitHub (version control)
-
-## 📝 Report Sections
-
-The project report covers:
-
-1. **Executive Summary** - High-level overview and key findings
-2. **Problem Description** - Business and technical objectives
-3. **Data Description** - Dataset schema, statistics, and characteristics
-4. **Data Preparation** - Cleaning, preprocessing, and feature engineering
-5. **Solution** - EDA, statistical analysis, modeling, and insights
-6. **Conclusion** - Summary and practical applications
-7. **Limitations** - Current constraints and future improvements
-
-## 🎯 Assessment Alignment
-
-### Report Assessment (80% of project marks)
-- ✅ Cover Page (5%)
-- ✅ Executive Summary (10%)
-- ✅ Problem Description (15%)
-- ✅ Data Description (15%)
-- ✅ Data Preparation (15%)
-- ✅ Solution (20%)
-- ✅ Conclusion (10%)
-- ✅ Appendix (10%)
-
-### Presentation Assessment (20% of project marks)
-- Prepare presentation slides based on report
-- Practice verbal delivery
-- Prepare for Q&A session
 
 ## 📚 Additional Resources
 
@@ -220,6 +166,6 @@ For questions or issues:
 
 ---
 
-**Project Status:** ✅ Complete - All deliverables ready for submission
+**Project Status:** Dashboard, data pipeline, and dataset live in this repository.
 
 **Last Updated:** [Current Date]

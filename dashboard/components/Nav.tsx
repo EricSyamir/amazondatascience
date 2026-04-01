@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { BarChart3, Lightbulb } from 'lucide-react'
+import { BarChart3, Lightbulb, Brain } from 'lucide-react'
 
 export default function Nav() {
   const pathname = usePathname()
@@ -33,6 +33,15 @@ export default function Nav() {
             >
               <Lightbulb className="w-4 h-4" />
               Business Insights
+            </Link>
+            <Link
+              href="/predictions"
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                pathname === '/predictions' ? 'bg-purple-100 text-purple-700' : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <Brain className="w-4 h-4" />
+              Predictions
             </Link>
           </div>
         </div>

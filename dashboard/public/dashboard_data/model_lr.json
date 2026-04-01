@@ -1,29 +1,26 @@
 {
   "type": "linear_regression",
-  "features": ["discounted_price", "actual_price", "discount_pct", "discount_amount"],
+  "features": ["discounted_price", "actual_price", "discount_pct"],
   "intercept": 4.0973403624,
   "coefficients": {
     "discounted_price": -0.086610332434,
     "actual_price": 0.11205357521,
-    "discount_pct": -0.051848124616,
-    "discount_amount": "NA"
+    "discount_pct": -0.051848124616
   },
   "feature_means": {
     "discounted_price": 3126.0119057377,
     "actual_price": 5447.0029234973,
-    "discount_pct": 47.7131147541,
-    "discount_amount": 2320.9910177596
+    "discount_pct": 47.7131147541
   },
   "feature_stds": {
     "discounted_price": 6946.6254420914,
     "actual_price": 10878.2700007203,
-    "discount_pct": 21.627422218,
-    "discount_amount": 4605.773531655
+    "discount_pct": 21.627422218
   },
   "metrics": {
     "mae": 0.2029,
     "rmse": 0.2644,
     "r2": 0.0474
   },
-  "description": "Predicts product rating (1–5) from pricing features — no category bias"
+  "description": "Predicts product rating (1–5) from 3 pricing features — no category or collinear bias"
 }

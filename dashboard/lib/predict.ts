@@ -31,8 +31,8 @@ export interface PredictionInput {
   discount_pct: number
 }
 
-// Build the 4-feature vector (same order as R training)
-function buildFeatureVector(input: PredictionInput): Record<string, number> {
+// Full pool of available features — each model picks what it needs via model.features
+function buildFeaturePool(input: PredictionInput): Record<string, number> {
   return {
     discounted_price: input.discounted_price,
     actual_price:     input.actual_price,
@@ -56,11 +56,14 @@ function normalize(
 // ── Prediction 1: Linear Regression ──────────────────────────────────────────
 
 export function predictRating(input: PredictionInput, model: LRModel): number {
-  const raw  = buildFeatureVector(input)
+  const pool = buildFeaturePool(input)
+  // Only normalise the features this model was trained on (avoids collinear NA)
+  const raw  = Object.fromEntries(model.features.map(f => [f, pool[f]]))
   const norm = normalize(raw, model.feature_means, model.feature_stds)
 
   let pred = model.intercept
   for (const [key, coef] of Object.entries(model.coefficients)) {
+    if (typeof coef !== 'number' || !isFinite(coef)) continue  // skip NA / Inf
     pred += coef * (norm[key] ?? 0)
   }
   return Math.max(1, Math.min(5, pred))
@@ -79,7 +82,8 @@ function euclideanDistance(a: number[], b: number[]): number {
 }
 
 export function predictHighRated(input: PredictionInput, model: KNNModel): KNNResult {
-  const raw      = buildFeatureVector(input)
+  const pool     = buildFeaturePool(input)
+  const raw      = Object.fromEntries(model.features.map(f => [f, pool[f]]))
   const norm     = normalize(raw, model.feature_means, model.feature_stds)
   const normVec  = model.features.map(f => norm[f] ?? 0)
 

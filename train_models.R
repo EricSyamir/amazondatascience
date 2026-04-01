@@ -57,34 +57,48 @@ df <- raw %>%
 cat(sprintf("Clean rows: %d\n", nrow(df)))
 
 # ── 2. Feature matrix & targets ───────────────────────────────────────────────
+#
+# LR uses 3 features — discount_amount is excluded because it equals
+# (actual_price - discounted_price), making it perfectly collinear and causing
+# an NA coefficient that propagates as NaN in JavaScript.
+# KNN is unaffected by collinearity, so it keeps all 4 features.
 
-FEATURES <- c("discounted_price", "actual_price", "discount_pct", "discount_amount")
+LR_FEATURES  <- c("discounted_price", "actual_price", "discount_pct")
+KNN_FEATURES <- c("discounted_price", "actual_price", "discount_pct", "discount_amount")
 
-X  <- df[, FEATURES]
+X_lr  <- df[, LR_FEATURES]
+X_knn <- df[, KNN_FEATURES]
 y_reg <- df$rating
 y_cls <- as.integer(df$rating >= 4.2)   # 1 = high-rated, 0 = not
 
 cat(sprintf("Class balance — high-rated: %d  (%.1f%%)  |  other: %d  (%.1f%%)\n",
     sum(y_cls), 100 * mean(y_cls), sum(1 - y_cls), 100 * mean(1 - y_cls)))
 
-# ── 3. Standardise (z-score) ──────────────────────────────────────────────────
+# ── 3. Standardise (z-score) per feature set ─────────────────────────────────
 
-feat_means <- colMeans(X)
-feat_stds  <- apply(X, 2, sd)
-feat_stds[feat_stds == 0] <- 1
+scale_features <- function(X, feat_names) {
+  means <- colMeans(X)
+  stds  <- apply(X, 2, sd)
+  stds[stds == 0] <- 1
+  scaled <- as.data.frame(mapply(function(col, m, s) (col - m) / s, X, means, stds))
+  colnames(scaled) <- feat_names
+  list(scaled = scaled, means = means, stds = stds)
+}
 
-X_scaled <- as.data.frame(
-  mapply(function(col, m, s) (col - m) / s, X, feat_means, feat_stds)
-)
-colnames(X_scaled) <- FEATURES
+lr_scaled  <- scale_features(X_lr,  LR_FEATURES)
+knn_scaled <- scale_features(X_knn, KNN_FEATURES)
 
 # ── 4. Train / test split (80 / 20) ──────────────────────────────────────────
 
-n         <- nrow(X_scaled)
+n         <- nrow(df)
 train_idx <- sample(n, floor(0.8 * n))
 test_idx  <- setdiff(seq_len(n), train_idx)
 
-Xtr <- X_scaled[train_idx, ];  Xte <- X_scaled[test_idx, ]
+# LR split
+Xtr_lr <- lr_scaled$scaled[train_idx, ];  Xte_lr <- lr_scaled$scaled[test_idx, ]
+# KNN split
+Xtr_knn <- knn_scaled$scaled[train_idx, ]; Xte_knn <- knn_scaled$scaled[test_idx, ]
+
 ytr_reg <- y_reg[train_idx];   yte_reg <- y_reg[test_idx]
 ytr_cls <- y_cls[train_idx];   yte_cls <- y_cls[test_idx]
 
@@ -94,10 +108,10 @@ ytr_cls <- y_cls[train_idx];   yte_cls <- y_cls[test_idx]
 
 cat("\n── Linear Regression ──\n")
 
-lm_df    <- cbind(Xtr, rating = ytr_reg)
+lm_df    <- cbind(Xtr_lr, rating = ytr_reg)
 lm_model <- lm(rating ~ ., data = lm_df)
 
-preds_lr <- predict(lm_model, newdata = Xte)
+preds_lr <- predict(lm_model, newdata = Xte_lr)
 preds_lr <- pmax(1, pmin(5, preds_lr))
 
 mae  <- mean(abs(preds_lr - yte_reg))
@@ -109,15 +123,20 @@ r2   <- 1 - ss_res / ss_tot
 cat(sprintf("  MAE:  %.4f\n  RMSE: %.4f\n  R²:   %.4f\n", mae, rmse, r2))
 
 coefs <- coef(lm_model)
+
+# Verify no NA coefficients
+if (any(is.na(coefs))) stop("NA coefficients detected — check feature collinearity!")
+cat("  All coefficients are valid (no NA).\n")
+
 model_lr <- list(
-  type        = "linear_regression",
-  features    = FEATURES,
-  intercept   = as.numeric(coefs[1]),
-  coefficients = as.list(coefs[-1]),
-  feature_means = as.list(feat_means),
-  feature_stds  = as.list(feat_stds),
-  metrics     = list(mae = round(mae, 4), rmse = round(rmse, 4), r2 = round(r2, 4)),
-  description = "Predicts product rating (1–5) from pricing features — no category bias"
+  type          = "linear_regression",
+  features      = LR_FEATURES,
+  intercept     = as.numeric(coefs[1]),
+  coefficients  = as.list(coefs[-1]),
+  feature_means = as.list(lr_scaled$means),
+  feature_stds  = as.list(lr_scaled$stds),
+  metrics       = list(mae = round(mae, 4), rmse = round(rmse, 4), r2 = round(r2, 4)),
+  description   = "Predicts product rating (1–5) from 3 pricing features — no category or collinear bias"
 )
 
 # ═════════════════════════════════════════════════════════════════════════════
@@ -128,14 +147,14 @@ cat("\n── KNN Classifier ──\n")
 
 best_k <- 5; best_acc <- 0
 for (k in c(3, 5, 7, 9, 11, 13, 15)) {
-  preds_k <- knn(Xtr, Xte, cl = ytr_cls, k = k)
+  preds_k <- knn(Xtr_knn, Xte_knn, cl = ytr_cls, k = k)
   acc     <- mean(as.integer(as.character(preds_k)) == yte_cls)
   cat(sprintf("  k = %2d  accuracy = %.4f\n", k, acc))
   if (acc > best_acc) { best_acc <- acc; best_k <- k }
 }
 cat(sprintf("Best k = %d  (accuracy = %.4f)\n", best_k, best_acc))
 
-final_preds <- knn(Xtr, Xte, cl = ytr_cls, k = best_k)
+final_preds <- knn(Xtr_knn, Xte_knn, cl = ytr_cls, k = best_k)
 knn_labels  <- as.integer(as.character(final_preds))
 
 # Confusion matrix metrics
@@ -152,17 +171,17 @@ cat(sprintf("  Precision: %.4f  Recall: %.4f  F1: %.4f\n", precision, recall, f1
 cat(sprintf("  Confusion matrix — TP:%d FP:%d FN:%d TN:%d\n", tp, fp, fn, tn))
 
 # Export training data (normalised) for JavaScript KNN inference
-knn_train_data <- lapply(seq_len(nrow(Xtr)), function(i) {
-  list(f = round(as.numeric(Xtr[i, ]), 6), l = as.integer(ytr_cls[i]))
+knn_train_data <- lapply(seq_len(nrow(Xtr_knn)), function(i) {
+  list(f = round(as.numeric(Xtr_knn[i, ]), 6), l = as.integer(ytr_cls[i]))
 })
 
 model_knn <- list(
   type          = "knn_classifier",
   k             = best_k,
-  features      = FEATURES,
+  features      = KNN_FEATURES,
   threshold     = 4.2,
-  feature_means = as.list(feat_means),
-  feature_stds  = as.list(feat_stds),
+  feature_means = as.list(knn_scaled$means),
+  feature_stds  = as.list(knn_scaled$stds),
   training_data = knn_train_data,
   metrics       = list(
     accuracy  = round(best_acc, 4),

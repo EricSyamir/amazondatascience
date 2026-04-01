@@ -27,6 +27,9 @@ Thumbs.db
 # Vercel
 .vercel
 
+# R
+.Rhistory
+
 # Misc
 *.log
 .env*.local

@@ -1,6 +1,6 @@
 {
   "type": "knn_classifier",
-  "k": 3,
+  "k": 11,
   "features": ["discounted_price", "actual_price", "discount_pct", "discount_amount"],
   "threshold": 4.2,
   "feature_means": {
@@ -4702,16 +4702,17 @@
     }
   ],
   "metrics": {
-    "accuracy": 0.628,
-    "precision": 0.5714,
+    "accuracy": 0.6075,
+    "precision": 0.5556,
     "recall": 0.6061,
-    "f1": 0.5882,
+    "f1": 0.5797,
     "confusion": {
       "tp": 80,
-      "fp": 60,
+      "fp": 64,
       "fn": 52,
-      "tn": 101
+      "tn": 97
     }
   },
-  "description": "Classifies if a product will be high-rated (>=4.2) — no category bias"
+  "description": "Classifies if a product will be high-rated (>=4.2) — no category bias",
+  "k_selection_rule": "Largest k whose holdout accuracy is within 2.5 percentage points of the peak — smoother votes than very small k."
 }

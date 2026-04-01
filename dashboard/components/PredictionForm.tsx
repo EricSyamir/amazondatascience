@@ -49,6 +49,16 @@ export default function PredictionForm() {
   const [ratingPred, setRatingPred] = useState<number | null>(null)
   const [knnResult, setKnnResult]   = useState<{ label: 0|1; confidence: number; neighbours: number } | null>(null)
 
+  const setActualSafe = (raw: number) => {
+    const next = Math.max(1, raw)
+    setActualPrice(next)
+    setDiscountedPrice(d => Math.min(d, next))
+  }
+
+  const setDiscountedSafe = (raw: number) => {
+    setDiscountedPrice(() => Math.min(Math.max(1, raw), actualPrice))
+  }
+
   useEffect(() => {
     loadModels()
       .then(setModels)
@@ -99,36 +109,54 @@ export default function PredictionForm() {
               Product Pricing Inputs
               <span className="ml-auto text-xs text-gray-400 font-normal">No category needed</span>
             </h3>
+            <p className="text-xs text-gray-500 -mt-3 mb-4">
+              Discounted price cannot exceed actual price — values are clamped automatically.
+            </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {/* Discounted price */}
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Discounted Price (₹)</label>
+                <label className="block text-xs font-medium text-gray-500 mb-1">
+                  Discounted Price (₹) <span className="text-gray-400">≤ actual</span>
+                </label>
                 <input
-                  type="number" min={1}
+                  type="number"
+                  min={1}
+                  max={actualPrice}
                   value={discountedPrice}
-                  onChange={e => setDiscountedPrice(Number(e.target.value))}
+                  onChange={e => setDiscountedSafe(Number(e.target.value))}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 />
-                <input type="range" min={100} max={20000} step={100}
-                  value={discountedPrice}
-                  onChange={e => setDiscountedPrice(Number(e.target.value))}
+                <input
+                  type="range"
+                  min={100}
+                  max={Math.max(100, actualPrice)}
+                  step={100}
+                  value={Math.min(discountedPrice, actualPrice)}
+                  onChange={e => setDiscountedSafe(Number(e.target.value))}
                   className="w-full mt-1.5 accent-indigo-600"
                 />
               </div>
 
               {/* Actual price */}
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Actual Price (₹)</label>
+                <label className="block text-xs font-medium text-gray-500 mb-1">
+                  Actual Price (₹) <span className="text-gray-400">≥ discounted</span>
+                </label>
                 <input
-                  type="number" min={1}
+                  type="number"
+                  min={discountedPrice}
                   value={actualPrice}
-                  onChange={e => setActualPrice(Number(e.target.value))}
+                  onChange={e => setActualSafe(Number(e.target.value))}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 />
-                <input type="range" min={100} max={30000} step={100}
+                <input
+                  type="range"
+                  min={Math.max(100, discountedPrice)}
+                  max={30000}
+                  step={100}
                   value={actualPrice}
-                  onChange={e => setActualPrice(Number(e.target.value))}
+                  onChange={e => setActualSafe(Number(e.target.value))}
                   className="w-full mt-1.5 accent-indigo-600"
                 />
               </div>
@@ -242,6 +270,11 @@ export default function PredictionForm() {
                     KNN (k={models.knn.k})
                   </span>
                 </div>
+                {models.knn.k_selection_rule && (
+                  <p className="text-xs text-gray-400 mt-2 leading-relaxed">
+                    {models.knn.k_selection_rule}
+                  </p>
+                )}
 
                 {knnResult !== null && (
                   <div className="text-center py-6 space-y-3">

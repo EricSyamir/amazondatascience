@@ -145,14 +145,26 @@ model_lr <- list(
 
 cat("\n── KNN Classifier ──\n")
 
-best_k <- 5; best_acc <- 0
-for (k in c(3, 5, 7, 9, 11, 13, 15)) {
+# Evaluate several k values, then pick the *largest* k within `tolerance`
+# of the best accuracy — k=3 can chase noise; a slightly larger k is often more stable.
+k_candidates <- c(3, 5, 7, 9, 11, 13, 15, 21)
+accs <- vapply(k_candidates, function(k) {
   preds_k <- knn(Xtr_knn, Xte_knn, cl = ytr_cls, k = k)
-  acc     <- mean(as.integer(as.character(preds_k)) == yte_cls)
-  cat(sprintf("  k = %2d  accuracy = %.4f\n", k, acc))
-  if (acc > best_acc) { best_acc <- acc; best_k <- k }
+  mean(as.integer(as.character(preds_k)) == yte_cls)
+}, numeric(1))
+for (i in seq_along(k_candidates)) {
+  cat(sprintf("  k = %2d  accuracy = %.4f\n", k_candidates[i], accs[i]))
 }
-cat(sprintf("Best k = %d  (accuracy = %.4f)\n", best_k, best_acc))
+best_acc_peak <- max(accs)
+# Within ~2.5 percentage points of peak: prefer a larger k (e.g. 5 over 3) for smoother votes
+tolerance     <- 0.025
+eligible      <- k_candidates[accs >= best_acc_peak - tolerance]
+best_k        <- max(eligible)
+best_acc      <- accs[which(k_candidates == best_k)[1]]
+cat(sprintf(
+  "Chosen k = %d  (accuracy = %.4f; peak = %.4f; largest k within %.1f pp of peak accuracy)\n",
+  best_k, best_acc, best_acc_peak, tolerance * 100
+))
 
 final_preds <- knn(Xtr_knn, Xte_knn, cl = ytr_cls, k = best_k)
 knn_labels  <- as.integer(as.character(final_preds))
@@ -190,8 +202,52 @@ model_knn <- list(
     f1        = round(f1,        4),
     confusion  = list(tp = tp, fp = fp, fn = fn, tn = tn)
   ),
-  description = "Classifies if a product will be high-rated (>=4.2) — no category bias"
+  description = "Classifies if a product will be high-rated (>=4.2) — no category bias",
+  k_selection_rule = sprintf(
+    "Largest k whose holdout accuracy is within %.1f percentage points of the peak — smoother votes than very small k.",
+    tolerance * 100
+  )
 )
+
+# ── Sample predictions (sanity check — arbitrary inputs have no \"true\" rating) ──
+
+cat("\n── Sample inputs (LR rating + KNN class) — illustrative only ──\n")
+
+samples_raw <- data.frame(
+  discounted_price = c(500, 1299, 9000),
+  actual_price     = c(600, 2999, 10000),
+  stringsAsFactors = FALSE
+)
+samples_raw$discount_pct <- round(
+  (samples_raw$actual_price - samples_raw$discounted_price) / samples_raw$actual_price * 100
+)
+samples_raw$discount_amount <- samples_raw$actual_price - samples_raw$discounted_price
+
+scale_row <- function(raw_row, feat_names, means_list, stds_list) {
+  z <- sapply(feat_names, function(nm) {
+    (raw_row[[nm]] - means_list[[nm]]) / stds_list[[nm]]
+  })
+  as.data.frame(t(z))
+}
+
+for (i in seq_len(nrow(samples_raw))) {
+  r <- samples_raw[i, , drop = FALSE]
+  lr_row  <- scale_row(r, LR_FEATURES,  lr_scaled$means,  lr_scaled$stds)
+  knn_row <- scale_row(r, KNN_FEATURES, knn_scaled$means, knn_scaled$stds)
+  colnames(lr_row)  <- LR_FEATURES
+  colnames(knn_row) <- KNN_FEATURES
+
+  pr_lr <- predict(lm_model, newdata = lr_row)
+  pr_lr <- max(1, min(5, as.numeric(pr_lr)))
+
+  pr_knn <- knn(Xtr_knn, knn_row, cl = ytr_cls, k = best_k)
+  lbl    <- as.integer(as.character(pr_knn))
+
+  cat(sprintf(
+    "  #%d discount=%.0f actual=%.0f pct=%.0f%% → LR rating=%.3f | KNN high-rated(≥4.2)=%d\n",
+    i, r$discounted_price, r$actual_price, r$discount_pct, pr_lr, lbl
+  ))
+}
 
 # ── 5. Write JSON to both data dirs ──────────────────────────────────────────
 

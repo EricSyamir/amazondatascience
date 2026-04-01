@@ -16,6 +16,7 @@ export interface LRModel {
 export interface KNNModel {
   type: string
   k: number
+  k_selection_rule?: string
   features: string[]
   threshold: number
   feature_means: Record<string, number>

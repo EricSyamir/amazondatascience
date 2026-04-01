@@ -1,5 +1,5 @@
 import PredictionForm from '@/components/PredictionForm'
-import { Brain, TrendingUp, Users, FlaskConical } from 'lucide-react'
+import { Brain, TrendingUp, Users } from 'lucide-react'
 
 export default function PredictionsPage() {
   return (
@@ -12,14 +12,14 @@ export default function PredictionsPage() {
           <h1 className="text-2xl font-bold text-gray-900">Product Predictions</h1>
         </div>
         <p className="text-gray-500 text-sm max-w-2xl">
-          Enter a product's pricing details to get instant predictions from three
+          Enter a product's pricing details to get instant predictions from two
           machine-learning models trained on the Amazon Sales Dataset.
           No category input is used — predictions are based purely on pricing to avoid category bias.
         </p>
       </div>
 
       {/* Model Overview Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-5">
           <div className="flex items-center gap-2 mb-2">
             <TrendingUp className="w-5 h-5 text-indigo-600" />
@@ -49,21 +49,6 @@ export default function PredictionsPage() {
             <li>📤 <strong>Output:</strong> High-rated / Not high-rated + confidence</li>
             <li>📊 <strong>Evaluation:</strong> Accuracy, F1, Precision, Recall</li>
             <li>🛠️ <strong>Trained in:</strong> R — training data exported as JSON for JS KNN</li>
-          </ul>
-        </div>
-        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-2">
-            <FlaskConical className="w-5 h-5 text-emerald-600" />
-            <h2 className="font-semibold text-emerald-800">Model 3 — Naive Bayes</h2>
-          </div>
-          <p className="text-sm text-emerald-700 mb-3">
-            Predicts whether the product will be <strong>high-rated (≥ 4.2)</strong> using probability theory.
-          </p>
-          <ul className="text-xs text-emerald-600 space-y-1">
-            <li>📥 <strong>Input:</strong> Same 4 pricing features (raw — no scaling needed)</li>
-            <li>📤 <strong>Output:</strong> P(High-Rated) + P(Not High-Rated) and decision</li>
-            <li>📊 <strong>Evaluation:</strong> Accuracy, F1, Precision, Recall</li>
-            <li>🛠️ <strong>Trained in:</strong> R — per-class means/stds exported as JSON</li>
           </ul>
         </div>
       </div>

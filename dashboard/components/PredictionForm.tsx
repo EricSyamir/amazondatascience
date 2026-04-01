@@ -1,17 +1,20 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Star, TrendingUp, Users, AlertCircle, CheckCircle2, Info } from 'lucide-react'
+import { Star, TrendingUp, Users, AlertCircle, CheckCircle2, Info, FlaskConical } from 'lucide-react'
 import {
   loadModels,
   predictRating,
   predictHighRated,
+  predictHighRatedNB,
   LRModel,
   KNNModel,
+  NBModel,
+  NBResult,
 } from '@/lib/predict'
 
-interface Models { lr: LRModel; knn: KNNModel }
-type Tab = 'lr' | 'knn'
+interface Models { lr: LRModel; knn: KNNModel; nb: NBModel }
+type Tab = 'lr' | 'knn' | 'nb'
 
 function StarRating({ value }: { value: number }) {
   return (
@@ -48,6 +51,7 @@ export default function PredictionForm() {
 
   const [ratingPred, setRatingPred] = useState<number | null>(null)
   const [knnResult, setKnnResult]   = useState<{ label: 0|1; confidence: number; neighbours: number } | null>(null)
+  const [nbResult,  setNbResult]    = useState<NBResult | null>(null)
 
   const setActualSafe = (raw: number) => {
     const next = Math.max(1, raw)
@@ -78,6 +82,7 @@ export default function PredictionForm() {
     const input = { discounted_price: discountedPrice, actual_price: actualPrice, discount_pct: discountPct }
     setRatingPred(predictRating(input, models.lr))
     setKnnResult(predictHighRated(input, models.knn))
+    setNbResult(predictHighRatedNB(input, models.nb))
   }, [models, discountedPrice, actualPrice, discountPct])
 
   useEffect(() => { if (models) run() }, [models, run])
@@ -206,6 +211,17 @@ export default function PredictionForm() {
                 <Users className="w-4 h-4" />
                 KNN Classifier
               </button>
+              <button
+                onClick={() => setActiveTab('nb')}
+                className={`flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 transition-colors ${
+                  activeTab === 'nb'
+                    ? 'border-emerald-600 text-emerald-700'
+                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                <FlaskConical className="w-4 h-4" />
+                Naive Bayes
+              </button>
             </div>
 
             {/* ── Tab: Linear Regression ── */}
@@ -331,6 +347,99 @@ export default function PredictionForm() {
                       ))}
                     </div>
                   </div>
+                </div>
+              </div>
+            )}
+            {/* ── Tab: Naive Bayes ── */}
+            {activeTab === 'nb' && (
+              <div className="bg-white rounded-b-xl rounded-tr-xl border border-t-0 border-gray-200 p-6">
+                <div className="flex items-start justify-between mb-1">
+                  <div>
+                    <h4 className="font-semibold text-gray-800">High-Rated Prediction</h4>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      Gaussian Naive Bayes — raw pricing features (no scaling needed)
+                    </p>
+                  </div>
+                  <span className="text-xs bg-emerald-50 text-emerald-600 border border-emerald-200 px-2 py-0.5 rounded-full">
+                    Naive Bayes
+                  </span>
+                </div>
+
+                {nbResult !== null && (
+                  <div className="text-center py-6 space-y-3">
+                    {nbResult.label === 1
+                      ? <CheckCircle2 className="w-14 h-14 text-green-500 mx-auto" />
+                      : <AlertCircle  className="w-14 h-14 text-amber-400 mx-auto" />
+                    }
+                    <p className={`text-2xl font-bold ${nbResult.label === 1 ? 'text-green-600' : 'text-amber-600'}`}>
+                      {nbResult.label === 1 ? 'High-Rated' : 'Not High-Rated'}
+                    </p>
+                    <p className="text-xs text-gray-400">Threshold: rating ≥ 4.2</p>
+
+                    {/* Probability bars for both classes */}
+                    <div className="max-w-xs mx-auto space-y-2 text-left">
+                      <div>
+                        <div className="flex justify-between text-xs text-gray-500 mb-1">
+                          <span>P(High-Rated)</span>
+                          <span className="font-semibold text-green-600">{(nbResult.probHighRated * 100).toFixed(1)}%</span>
+                        </div>
+                        <div className="w-full bg-gray-100 rounded-full h-3">
+                          <div
+                            className="h-3 rounded-full bg-green-500 transition-all duration-500"
+                            style={{ width: `${nbResult.probHighRated * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex justify-between text-xs text-gray-500 mb-1">
+                          <span>P(Not High-Rated)</span>
+                          <span className="font-semibold text-amber-600">{(nbResult.probNotHighRated * 100).toFixed(1)}%</span>
+                        </div>
+                        <div className="w-full bg-gray-100 rounded-full h-3">
+                          <div
+                            className="h-3 rounded-full bg-amber-400 transition-all duration-500"
+                            style={{ width: `${nbResult.probNotHighRated * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-gray-400 mt-1">
+                      Decision: class with highest posterior probability wins
+                    </p>
+                  </div>
+                )}
+
+                <div className="border-t border-gray-100 pt-4">
+                  <p className="text-xs text-gray-400 font-medium mb-2">Model performance on 20% holdout</p>
+                  <div className="flex gap-2 flex-wrap">
+                    <MetricPill label="Acc"  value={`${(models.nb.metrics.accuracy  * 100).toFixed(1)}%`} />
+                    <MetricPill label="F1"   value={models.nb.metrics.f1.toFixed(3)} />
+                    <MetricPill label="Prec" value={models.nb.metrics.precision.toFixed(3)} />
+                    <MetricPill label="Rec"  value={models.nb.metrics.recall.toFixed(3)} />
+                  </div>
+
+                  <div className="mt-4">
+                    <p className="text-xs text-gray-400 font-medium mb-2">Confusion matrix</p>
+                    <div className="grid grid-cols-2 gap-1.5 max-w-[200px]">
+                      {[
+                        { label: 'TP', val: models.nb.metrics.confusion.tp, color: 'bg-green-100 text-green-700' },
+                        { label: 'FP', val: models.nb.metrics.confusion.fp, color: 'bg-red-100 text-red-600' },
+                        { label: 'FN', val: models.nb.metrics.confusion.fn, color: 'bg-orange-100 text-orange-600' },
+                        { label: 'TN', val: models.nb.metrics.confusion.tn, color: 'bg-blue-100 text-blue-700' },
+                      ].map(c => (
+                        <div key={c.label} className={`rounded-lg px-3 py-1.5 text-center ${c.color}`}>
+                          <p className="text-[10px] font-medium">{c.label}</p>
+                          <p className="text-sm font-bold">{c.val}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <p className="text-xs text-gray-400 mt-3 leading-relaxed">
+                    Naive Bayes assumes each feature is independent and normally distributed per class.
+                    No scaling needed — uses raw prices and discount values directly.
+                  </p>
                 </div>
               </div>
             )}

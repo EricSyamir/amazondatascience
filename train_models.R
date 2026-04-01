@@ -209,9 +209,99 @@ model_knn <- list(
   )
 )
 
+# ═════════════════════════════════════════════════════════════════════════════
+# MODEL 3 — Gaussian Naive Bayes Classifier
+# ═════════════════════════════════════════════════════════════════════════════
+# Same task as KNN: predict high-rated (rating >= 4.2) or not.
+# Gaussian NB assumes each feature is normally distributed per class.
+# Exported as: class priors + per-class per-feature (mean, sd) — tiny JSON.
+# JS inference: log P(class) + Σ log Gaussian(x; μ, σ) → argmax class.
+# Uses RAW (un-normalised) features — NB doesn't care about scale differences
+# between features because each feature is modelled independently.
+
+cat("\n── Gaussian Naive Bayes ──\n")
+
+NB_FEATURES <- KNN_FEATURES   # same 4 features as KNN
+
+X_nb_tr <- df[train_idx, NB_FEATURES]
+X_nb_te <- df[test_idx,  NB_FEATURES]
+
+classes <- c(0L, 1L)
+
+# Compute per-class priors and per-class per-feature Gaussian params
+nb_class_stats <- lapply(classes, function(cls) {
+  rows <- X_nb_tr[ytr_cls == cls, , drop = FALSE]
+  feat_stats <- lapply(NB_FEATURES, function(nm) {
+    v <- rows[[nm]]
+    list(mean = mean(v, na.rm = TRUE), sd = sd(v, na.rm = TRUE))
+  })
+  names(feat_stats) <- NB_FEATURES
+  list(
+    prior      = mean(ytr_cls == cls),
+    n          = sum(ytr_cls == cls),
+    feat_stats = feat_stats
+  )
+})
+names(nb_class_stats) <- as.character(classes)
+
+# Gaussian log-probability helper
+log_gaussian <- function(x, mu, sigma) {
+  if (sigma <= 0) sigma <- 1e-9
+  -0.5 * log(2 * pi * sigma^2) - (x - mu)^2 / (2 * sigma^2)
+}
+
+# Predict on test set
+nb_predict <- function(X_raw) {
+  apply(X_raw, 1, function(row) {
+    scores <- vapply(as.character(classes), function(cls) {
+      s <- log(nb_class_stats[[cls]]$prior)
+      for (nm in NB_FEATURES) {
+        s <- s + log_gaussian(
+          row[[nm]],
+          nb_class_stats[[cls]]$feat_stats[[nm]]$mean,
+          nb_class_stats[[cls]]$feat_stats[[nm]]$sd
+        )
+      }
+      s
+    }, numeric(1))
+    as.integer(names(which.max(scores)))
+  })
+}
+
+nb_preds <- nb_predict(X_nb_te)
+
+nb_acc  <- mean(nb_preds == yte_cls)
+nb_tp   <- sum(nb_preds == 1L & yte_cls == 1L)
+nb_fp   <- sum(nb_preds == 1L & yte_cls == 0L)
+nb_fn   <- sum(nb_preds == 0L & yte_cls == 1L)
+nb_tn   <- sum(nb_preds == 0L & yte_cls == 0L)
+nb_prec <- if ((nb_tp + nb_fp) > 0) nb_tp / (nb_tp + nb_fp) else 0
+nb_rec  <- if ((nb_tp + nb_fn) > 0) nb_tp / (nb_tp + nb_fn) else 0
+nb_f1   <- if ((nb_prec + nb_rec) > 0) 2 * nb_prec * nb_rec / (nb_prec + nb_rec) else 0
+
+cat(sprintf("  Accuracy:  %.4f\n  Precision: %.4f  Recall: %.4f  F1: %.4f\n",
+            nb_acc, nb_prec, nb_rec, nb_f1))
+cat(sprintf("  Confusion matrix — TP:%d FP:%d FN:%d TN:%d\n", nb_tp, nb_fp, nb_fn, nb_tn))
+
+model_nb <- list(
+  type        = "naive_bayes_classifier",
+  features    = NB_FEATURES,
+  threshold   = 4.2,
+  classes     = as.integer(classes),
+  class_stats = nb_class_stats,
+  metrics     = list(
+    accuracy  = round(nb_acc,  4),
+    precision = round(nb_prec, 4),
+    recall    = round(nb_rec,  4),
+    f1        = round(nb_f1,   4),
+    confusion  = list(tp = nb_tp, fp = nb_fp, fn = nb_fn, tn = nb_tn)
+  ),
+  description = "Gaussian Naive Bayes — classifies high-rated (>=4.2) from raw pricing features"
+)
+
 # ── Sample predictions (sanity check — arbitrary inputs have no \"true\" rating) ──
 
-cat("\n── Sample inputs (LR rating + KNN class) — illustrative only ──\n")
+cat("\n── Sample inputs (LR + KNN + NB) — illustrative only ──\n")
 
 samples_raw <- data.frame(
   discounted_price = c(500, 1299, 9000),
@@ -241,11 +331,14 @@ for (i in seq_len(nrow(samples_raw))) {
   pr_lr <- max(1, min(5, as.numeric(pr_lr)))
 
   pr_knn <- knn(Xtr_knn, knn_row, cl = ytr_cls, k = best_k)
-  lbl    <- as.integer(as.character(pr_knn))
+  lbl_knn <- as.integer(as.character(pr_knn))
+
+  # NB prediction on raw row
+  lbl_nb <- nb_predict(r)
 
   cat(sprintf(
-    "  #%d discount=%.0f actual=%.0f pct=%.0f%% → LR rating=%.3f | KNN high-rated(≥4.2)=%d\n",
-    i, r$discounted_price, r$actual_price, r$discount_pct, pr_lr, lbl
+    "  #%d disc=%.0f actual=%.0f pct=%.0f%% → LR=%.3f | KNN=%d | NB=%d\n",
+    i, r$discounted_price, r$actual_price, r$discount_pct, pr_lr, lbl_knn, lbl_nb
   ))
 }
 
@@ -258,6 +351,8 @@ for (d in output_dirs) {
              pretty = TRUE, auto_unbox = TRUE, digits = 10)
   write_json(model_knn, file.path(d, "model_knn.json"),
              pretty = TRUE, auto_unbox = TRUE, digits = 6)
+  write_json(model_nb,  file.path(d, "model_nb.json"),
+             pretty = TRUE, auto_unbox = TRUE, digits = 10)
   cat(sprintf("Written to %s/\n", d))
 }
 

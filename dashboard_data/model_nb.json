@@ -1,0 +1,65 @@
+{
+  "type": "naive_bayes_classifier",
+  "features": ["discounted_price", "actual_price", "discount_pct", "discount_amount"],
+  "threshold": 4.2,
+  "classes": [0, 1],
+  "class_stats": {
+    "0": {
+      "prior": 0.52775405636,
+      "n": 618,
+      "feat_stats": {
+        "discounted_price": {
+          "mean": 2320.699368932,
+          "sd": 4890.228395537
+        },
+        "actual_price": {
+          "mean": 4109.5748867314,
+          "sd": 7286.2343733853
+        },
+        "discount_pct": {
+          "mean": 50.2330097087,
+          "sd": 20.0142755617
+        },
+        "discount_amount": {
+          "mean": 1788.8755177994,
+          "sd": 2963.9855980577
+        }
+      }
+    },
+    "1": {
+      "prior": 0.47224594364,
+      "n": 553,
+      "feat_stats": {
+        "discounted_price": {
+          "mean": 4038.0473056058,
+          "sd": 8833.3140238006
+        },
+        "actual_price": {
+          "mean": 6992.3580470163,
+          "sd": 14230.3075613937
+        },
+        "discount_pct": {
+          "mean": 45.2676311031,
+          "sd": 22.0799104784
+        },
+        "discount_amount": {
+          "mean": 2954.3107414105,
+          "sd": 6009.901923923
+        }
+      }
+    }
+  },
+  "metrics": {
+    "accuracy": 0.5768,
+    "precision": 0.6111,
+    "recall": 0.1667,
+    "f1": 0.2619,
+    "confusion": {
+      "tp": 22,
+      "fp": 14,
+      "fn": 110,
+      "tn": 147
+    }
+  },
+  "description": "Gaussian Naive Bayes — classifies high-rated (>=4.2) from raw pricing features"
+}
